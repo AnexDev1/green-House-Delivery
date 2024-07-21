@@ -45,10 +45,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               centerTitle: true,
               background: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  bottomLeft:
-                      Radius.circular(20.0), // Adjust the radius as needed
-                  bottomRight:
-                      Radius.circular(20.0), // Adjust the radius as needed
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0),
                 ),
                 child: Image.network(
                   widget.product.imageUrl,
@@ -57,10 +55,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ),
             ),
             actions: <Widget>[
-              // Text(
-              //   widget.product.category,
-              //   style: const TextStyle(fontSize: 16.0, color: Colors.white),
-              // ),
               IconButton(
                   onPressed: () {},
                   icon: const Icon(
@@ -96,7 +90,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 10), // Increased space
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -110,17 +104,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Container(
                             height: 25,
                             width: 25,
-                            alignment: Alignment.center, // Center the icon
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.grey), // Outline color
-                              borderRadius: BorderRadius.circular(
-                                  4), // More square-like corners
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: IconButton(
-                              padding: EdgeInsets
-                                  .zero, // Remove padding to allow the icon to center
-                              iconSize: 20, // Adjust the icon size as needed
+                              padding: EdgeInsets.zero,
+                              iconSize: 20,
                               icon:
                                   const Icon(Icons.remove, color: Colors.black),
                               onPressed: decrementQuantity,
@@ -132,20 +123,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           Container(
                             height: 25,
                             width: 25,
-                            alignment: Alignment.center, // Center the icon
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors
-                                  .amber, // Amber background color for the add icon
-                              border: Border.all(
-                                  color: Colors
-                                      .amber), // Outline color matches background
-                              borderRadius: BorderRadius.circular(
-                                  4), // More square-like corners
+                              color: Colors.amber,
+                              border: Border.all(color: Colors.amber),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: IconButton(
-                              padding: EdgeInsets
-                                  .zero, // Remove padding to allow the icon to center
-                              iconSize: 20, // Adjust the icon size as needed
+                              padding: EdgeInsets.zero,
+                              iconSize: 20,
                               icon: const Icon(Icons.add, color: Colors.black),
                               onPressed: incrementQuantity,
                             ),
@@ -154,20 +140,26 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 20), // Increased space
                   Text(
                     'About ${widget.product.name}',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 10), // Increased space
                   const Text(
-                    'lorem ipsum dolor sit amet ipsum dolor sit ametipsum dolor sit ametipsum dolor sit ametipsum dolor sit ametipsum dolor sit ametipsum dolor sit amet',
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20), // Increased space
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
-                      minimumSize: const Size(
-                          double.infinity, 50), // Full width and 50 height
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                     onPressed: () {
                       // Add your add to cart functionality here
