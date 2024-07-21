@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
-import 'package:greenhouse/src/view/home/home_page.dart';
 
 void main() {
   runApp(const MyApp());

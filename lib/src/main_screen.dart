@@ -13,7 +13,7 @@ class _MainScreenState extends State<MainScreen> {
 
   // List of widgets to display in the body of Scaffold, based on the selected index
   final List<Widget> _widgetOptions = [
-     HomePage(), // Assuming HomePage is one of your pages
+    HomePage(), // Assuming HomePage is one of your pages
     // Add other pages here, e.g., SearchPage(), ProfilePage(), etc.
   ];
 
@@ -37,11 +37,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle),
-            label: 'Home',
+            label: 'Add',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_sharp),
-            label: 'Home',
+            label: 'Profile',
           ),
 
           // Add other items for your pages here
