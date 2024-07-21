@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
+import 'package:greenhouse/src/providers/cartProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: MyApp(), // Your main app widget
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,13 +21,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'green house',
-      theme: ThemeData(
-
-      ),
+      theme: ThemeData(),
       home: const MainScreen(),
-
     );
   }
 }
-
-

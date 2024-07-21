@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/widgets/carousel.dart';
 import 'package:greenhouse/src/widgets/product_card.dart';
@@ -141,7 +140,6 @@ class HomePage extends StatelessWidget {
                           },
                           child: ProductCard(
                             product: product,
-                            onTap: () {},
                           )),
                     );
                   },
