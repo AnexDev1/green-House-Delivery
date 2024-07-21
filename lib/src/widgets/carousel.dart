@@ -88,11 +88,11 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                 onTap: () => _carouselController.animateToPage(entry.key),
                 child: Container(
                   width: 12.0,
-                  height: 12.0,
+                  height: 6.0,
                   margin: const EdgeInsets.symmetric(
                       vertical: 8.0, horizontal: 4.0),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: BoxShape.rectangle,
                     color: _currentIndex == entry.key
                         ? Colors.amber
                         : Colors.grey[400],

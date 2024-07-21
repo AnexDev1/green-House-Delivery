@@ -126,9 +126,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                               onPressed: decrementQuantity,
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Text('$quantity'),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Container(
                             height: 25,
                             width: 25,
