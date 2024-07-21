@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
+import '../providers/cartProvider.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
-  final Function onTap;
 
-  const ProductCard({super.key, required this.product, required this.onTap});
+  const ProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class ProductCard extends StatelessWidget {
               tag:
                   'product-hero-${product.id}', // Ensure this tag is unique for each product
               child: Image.network(product.imageUrl,
-                  height: 135, fit: BoxFit.cover),
+                  height: 110, fit: BoxFit.cover),
             ),
           ),
           Padding(
@@ -48,7 +49,18 @@ class ProductCard extends StatelessWidget {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.add, size: 14),
-                        onPressed: () => onTap(),
+                        onPressed: () {
+                          // Access the cart provider and add the product
+                          Provider.of<CartProvider>(context, listen: false)
+                              .addProduct(product);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('${product.name} added to cart'),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -59,17 +71,21 @@ class ProductCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, size: 14, color: Colors.yellow),
                       const SizedBox(width: 5),
-                      Text('${product.rating}',
-                          style: const TextStyle(fontSize: 14)),
+                      Text(
+                        '${product.rating}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Text(
-                    '\$${product.price.toStringAsFixed(2)}',
+                    '${product.price.toStringAsFixed(2)} Birr',
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
