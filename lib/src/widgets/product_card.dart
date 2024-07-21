@@ -17,22 +17,27 @@ class ProductCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
-            child:Hero(
-              tag: 'product-hero-${product.id}', // Ensure this tag is unique for each product
-              child: Image.network(product.imageUrl,height: 100, fit: BoxFit.cover),
+            child: Hero(
+              tag:
+                  'product-hero-${product.id}', // Ensure this tag is unique for each product
+              child: Image.network(product.imageUrl,
+                  height: 135, fit: BoxFit.cover),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top:10.0, left: 10.0),
+            padding: const EdgeInsets.only(top: 10.0, left: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(product.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(product.name,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.star, size: 14, color: Colors.yellow),
-                    Text('${product.rating}', style: const TextStyle(fontSize: 14)),
+                    Text('${product.rating}',
+                        style: const TextStyle(fontSize: 14)),
                   ],
                 ),
               ],
@@ -42,10 +47,12 @@ class ProductCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 13.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    mainAxisSize: MainAxisSize.min,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('\$${product.price.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(width:40.0),
+                Text('\$${product.price.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 40.0),
                 Container(
                   width: 30,
                   height: 30,
