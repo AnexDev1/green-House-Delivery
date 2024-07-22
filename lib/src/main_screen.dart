@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/cart_page.dart';
 import 'package:greenhouse/src/view/home/home_page.dart';
+import 'package:greenhouse/src/view/profile/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,7 +16,8 @@ class _MainScreenState extends State<MainScreen> {
   // List of widgets to display in the body of Scaffold, based on the selected index
   final List<Widget> _widgetOptions = [
     HomePage(),
-    CartPage(), // Assuming HomePage is one of your pages
+    const CartPage(),
+    const ProfilePage() // Assuming HomePage is one of your pages
     // Add other pages here, e.g., SearchPage(), ProfilePage(), etc.
   ];
 
