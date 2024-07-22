@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/widgets/carousel.dart';
-import 'package:greenhouse/src/widgets/category_tab.dart';
+import 'package:greenhouse/src/view/home/view/carousel.dart';
+import 'package:greenhouse/src/view/home/view/category_tab.dart';
+import 'package:greenhouse/src/view/home/view/recommended_section.dart';
+import 'package:greenhouse/src/view/home/view/searchbar.dart';
 import 'package:greenhouse/src/widgets/product_list.dart';
-import 'package:greenhouse/src/widgets/recommended_section.dart';
-import 'package:greenhouse/src/widgets/searchbar.dart';
 
 import '../../models/product.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/product.dart';
 
-import '../view/product/product_list_page.dart';
+import '../../product/product_list_page.dart';
 
 class RecommendedSection extends StatelessWidget {
   final String currentCategory;
