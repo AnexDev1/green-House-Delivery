@@ -24,33 +24,33 @@ List<Product> productList = [
   Product(
     imageUrl:
         "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 1",
+    name: "Green Special",
     rating: 4.5,
-    price: 19.99,
+    price: 349.99,
     category: "burger",
     isPopular: true,
   ),
   Product(
       imageUrl:
           "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-      name: "Product 2",
+      name: "Chicken Pizza",
       rating: 4.0,
-      price: 29.99,
+      price: 439.99,
       category: "Pizza",
       isPopular: true),
   Product(
     imageUrl:
         "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 3",
+    name: "Jumbo Special",
     rating: 5.0,
-    price: 9.99,
+    price: 549.99,
     category: "Burger",
     isPopular: true,
   ),
   Product(
     imageUrl:
         "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 4",
+    name: "Coke",
     rating: 3.5,
     price: 14.99,
     category: "Drinks",
