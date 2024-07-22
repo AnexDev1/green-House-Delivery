@@ -7,10 +7,10 @@ class RecommendedSection extends StatelessWidget {
   final String currentCategory;
   final List<Product> filteredProducts;
   const RecommendedSection({
-    Key? key,
+    super.key,
     required this.currentCategory,
     required this.filteredProducts,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,10 @@ class RecommendedSection extends StatelessWidget {
                 ),
               );
             },
-            child: const Text('See All'),
+            child: const Text(
+              'See All',
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       ),

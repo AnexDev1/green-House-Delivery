@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/models/product.dart';
+import 'package:greenhouse/src/services/firebase_database_service.dart';
 import 'package:greenhouse/src/view/home/view/carousel.dart';
 import 'package:greenhouse/src/view/home/view/category_tab.dart';
 import 'package:greenhouse/src/view/home/view/recommended_section.dart';
 import 'package:greenhouse/src/view/home/view/searchbar.dart';
 import 'package:greenhouse/src/widgets/product_list.dart';
-
-import '../../models/product.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,12 +17,43 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late Future<List<Product>> _productsFuture;
+  List<Product> _filteredProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _productsFuture = FirebaseDatabaseService().fetchProducts();
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        _updateFilteredProducts();
+      }
+    });
+    _updateFilteredProducts(); // Initial update
+  }
+
+  void _updateFilteredProducts() async {
+    final products = await _productsFuture;
+    setState(() {
+      String selectedCategory = getCurrentCategory();
+      if (selectedCategory == 'Popular') {
+        _filteredProducts =
+            products.where((product) => product.isPopular).toList();
+      } else {
+        _filteredProducts = products
+            .where((product) =>
+                product.category.toLowerCase() ==
+                selectedCategory.toLowerCase())
+            .toList();
+      }
+    });
+  }
 
   String getCurrentCategory() {
     if (_tabController.index == 0) {
-      return 'Popular'; // This indicates the popular tab is selected
+      return 'Popular';
     } else {
-      // Return the category name based on the selected tab
       switch (_tabController.index) {
         case 1:
           return 'Pizza';
@@ -31,45 +62,9 @@ class _HomePageState extends State<HomePage>
         case 3:
           return 'Drinks';
         default:
-          return 'Popular'; // Fallback, should not be reached
+          return 'Popular';
       }
     }
-  }
-
-  List<Product> filteredProducts = [];
-  final List<String> imgList = [
-    'https://example.com/image1.jpg',
-    'https://example.com/image2.jpg',
-    'https://example.com/image3.jpg',
-    // Add more image URLs as needed
-  ];
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(_updateFilteredProducts);
-    _updateFilteredProducts(); // Initial update
-  }
-
-  void _updateFilteredProducts() {
-    if (_tabController.indexIsChanging) return;
-
-    setState(() {
-      String selectedCategory = getCurrentCategory();
-      if (selectedCategory == 'Popular') {
-        // Filter products that are popular
-        filteredProducts =
-            productList.where((product) => product.isPopular).toList();
-      } else {
-        // For other categories, filter by category name
-        // Assuming you want to show popular items in these categories, add && product.isPopular if needed
-        filteredProducts = productList
-            .where((product) =>
-                product.category.toLowerCase() ==
-                selectedCategory.toLowerCase())
-            .toList();
-      }
-    });
   }
 
   @override
@@ -94,22 +89,14 @@ class _HomePageState extends State<HomePage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(
-                        'Hello, Anwar',
-                        style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight
-                                .bold), // Adjusted for better fit in AppBar
-                      ),
-                      Text(
-                        'Welcome back',
-                        style: TextStyle(
-                            fontSize: 16), // Adjusted for better fit in AppBar
-                      ),
+                      Text('Hello, Anwar',
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold)),
+                      Text('Welcome back', style: TextStyle(fontSize: 16)),
                     ],
                   ),
                   CircleAvatar(
-                    radius: 18.0, // Adjusted for better fit in AppBar
+                    radius: 18.0,
                     backgroundImage: NetworkImage(
                         'https://randomuser.me/api/portraits/women/93.jpg'),
                     backgroundColor: Colors.transparent,
@@ -117,7 +104,7 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
             ),
-            titleSpacing: 0, // Reduces the default spacing
+            titleSpacing: 0,
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -135,13 +122,23 @@ class _HomePageState extends State<HomePage>
                   ),
                 ),
                 CategoryTabBar(controller: _tabController),
-                RecommendedSection(
-                  currentCategory: getCurrentCategory(),
-                  filteredProducts: filteredProducts,
+                FutureBuilder<List<Product>>(
+                  future: _productsFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return const Text('Error fetching products');
+                    } else {
+                      _filteredProducts = snapshot.data ?? [];
+                      return RecommendedSection(
+                        currentCategory: getCurrentCategory(),
+                        filteredProducts: _filteredProducts,
+                      );
+                    }
+                  },
                 ),
-                ProductList(
-                    filteredProducts:
-                        filteredProducts) // he rest of your body content goes here
+                ProductList(filteredProducts: _filteredProducts),
               ],
             ),
           ),

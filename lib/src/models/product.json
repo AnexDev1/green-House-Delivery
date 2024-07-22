@@ -1,0 +1,18 @@
+{
+  "products": {
+    "product1": {
+      "id": "1",
+      "name": "Pizza Margherita",
+      "description": "Classic Margherita with fresh mozzarella and basil.",
+      "price": 5.99,
+      "imageUrl": "url_to_image"
+    },
+    "product2": {
+      "id": "2",
+      "name": "Vegan Burger",
+      "description": "A delicious plant-based burger.",
+      "price": 7.99,
+      "imageUrl": "url_to_image"
+    }
+  }
+}
