@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/widgets/carousel.dart';
-import 'package:greenhouse/src/widgets/product_card.dart';
+import 'package:greenhouse/src/widgets/category_tab.dart';
+import 'package:greenhouse/src/widgets/product_list.dart';
+import 'package:greenhouse/src/widgets/recommended_section.dart';
+import 'package:greenhouse/src/widgets/searchbar.dart';
 
 import '../../models/product.dart';
-import '../product/product_detail_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,6 +17,25 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  String getCurrentCategory() {
+    if (_tabController.index == 0) {
+      return 'Popular'; // This indicates the popular tab is selected
+    } else {
+      // Return the category name based on the selected tab
+      switch (_tabController.index) {
+        case 1:
+          return 'Pizza';
+        case 2:
+          return 'Burger';
+        case 3:
+          return 'Drinks';
+        default:
+          return 'Popular'; // Fallback, should not be reached
+      }
+    }
+  }
+
   List<Product> filteredProducts = [];
   final List<String> imgList = [
     'https://example.com/image1.jpg',
@@ -34,13 +55,7 @@ class _HomePageState extends State<HomePage>
     if (_tabController.indexIsChanging) return;
 
     setState(() {
-      String selectedCategory = _tabController.index == 0
-          ? 'Popular'
-          : _tabController.index == 1
-              ? 'Pizza'
-              : _tabController.index == 2
-                  ? 'Burger'
-                  : 'Drinks';
+      String selectedCategory = getCurrentCategory();
       if (selectedCategory == 'Popular') {
         // Filter products that are popular
         filteredProducts =
@@ -71,7 +86,7 @@ class _HomePageState extends State<HomePage>
         child: Scaffold(
           appBar: AppBar(
             title: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -107,104 +122,26 @@ class _HomePageState extends State<HomePage>
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.filter_list),
-                        onPressed: () {
-                          // Implement filter logic
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ),
+                const SearchBarWidget(),
                 const VerticalImageCarousel(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
+                const Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Category', style: TextStyle(fontSize: 20)),
-                      TextButton(
-                        onPressed: () {
-                          // Implement See All logic
-                        },
-                        child: const Text('See All'),
-                      ),
+                      Text('Category', style: TextStyle(fontSize: 20)),
                     ],
                   ),
                 ),
-                TabBar(
-                  dividerHeight: 0,
-                  controller: _tabController,
-                  tabAlignment: TabAlignment.start,
-                  isScrollable: true,
-                  tabs: const [
-                    Tab(text: 'Popular'),
-                    Tab(text: 'Pizza'),
-                    Tab(text: 'Burger'),
-                    Tab(text: 'Drinks'),
-                  ],
+                CategoryTabBar(controller: _tabController),
+                RecommendedSection(
+                  currentCategory: getCurrentCategory(),
+                  filteredProducts: filteredProducts,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Recommended For You',
-                          style: TextStyle(fontSize: 20)),
-                      TextButton(
-                        onPressed: () {
-                          // Implement See All logic
-                        },
-                        child: const Text('See All'),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height * .3,
-                    child: filteredProducts.isNotEmpty
-                        ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: filteredProducts
-                                .length, // Assume productList is a list of Product objects
-                            itemBuilder: (context, index) {
-                              final product = filteredProducts[index];
-                              return Container(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5.0),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProductDetailPage(
-                                                  product: product),
-                                        ),
-                                      );
-                                    },
-                                    child: ProductCard(
-                                      product: product,
-                                    )),
-                              );
-                            },
-                            padding: const EdgeInsets.only(bottom: 5),
-                          )
-                        : const Center(
-                            child: Text('No products found'),
-                          )
-                    // T
-                    ) // he rest of your body content goes here
+                ProductList(
+                    filteredProducts:
+                        filteredProducts) // he rest of your body content goes here
               ],
             ),
           ),

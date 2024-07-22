@@ -22,11 +22,11 @@ class _ProfilePageState extends State<ProfilePage> {
             const CircleAvatar(
               radius: 50,
               backgroundImage: NetworkImage(
-                  'https://randomuser.me/api/portraits/men/32.jpg'),
+                  'https://randomuser.me/api/portraits/men/33.jpg'),
             ),
             const SizedBox(height: 20),
             const Text(
-              'John Doe',
+              'Anwar N',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 10),
             Text(
-              'john.doe@example.com',
+              'anwarnas1252@gmail.com',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],

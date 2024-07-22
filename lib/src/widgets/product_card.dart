@@ -14,6 +14,7 @@ class ProductCard extends StatelessWidget {
       color: Colors.grey[100],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
@@ -21,23 +22,26 @@ class ProductCard extends StatelessWidget {
               tag:
                   'product-hero-${product.id}', // Ensure this tag is unique for each product
               child: Image.network(product.imageUrl,
-                  height: 110, fit: BoxFit.cover),
+                  height: 100, fit: BoxFit.cover),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       product.name,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 14, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(
-                      width: 40,
+                      width: 7,
                     ),
                     Container(
                       width: 30,
