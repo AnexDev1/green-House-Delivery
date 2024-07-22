@@ -5,15 +5,64 @@ import 'package:greenhouse/src/widgets/product_card.dart';
 import '../../models/product.dart';
 import '../product/product_detail_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  List<Product> filteredProducts = [];
   final List<String> imgList = [
     'https://example.com/image1.jpg',
     'https://example.com/image2.jpg',
     'https://example.com/image3.jpg',
     // Add more image URLs as needed
   ];
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(_updateFilteredProducts);
+    _updateFilteredProducts(); // Initial update
+  }
+
+  void _updateFilteredProducts() {
+    if (_tabController.indexIsChanging) return;
+
+    setState(() {
+      String selectedCategory = _tabController.index == 0
+          ? 'Popular'
+          : _tabController.index == 1
+              ? 'Pizza'
+              : _tabController.index == 2
+                  ? 'Burger'
+                  : 'Drinks';
+      if (selectedCategory == 'Popular') {
+        // Filter products that are popular
+        filteredProducts =
+            productList.where((product) => product.isPopular).toList();
+      } else {
+        // For other categories, filter by category name
+        // Assuming you want to show popular items in these categories, add && product.isPopular if needed
+        filteredProducts = productList
+            .where((product) =>
+                product.category.toLowerCase() ==
+                selectedCategory.toLowerCase())
+            .toList();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -92,11 +141,12 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              const TabBar(
+              TabBar(
                 dividerHeight: 0,
+                controller: _tabController,
                 tabAlignment: TabAlignment.start,
                 isScrollable: true,
-                tabs: [
+                tabs: const [
                   Tab(text: 'Popular'),
                   Tab(text: 'Pizza'),
                   Tab(text: 'Burger'),
@@ -121,32 +171,37 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: productList
-                      .length, // Assume productList is a list of Product objects
-                  itemBuilder: (context, index) {
-                    final product = productList[index];
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductDetailPage(product: product),
-                              ),
+                  child: filteredProducts.isNotEmpty
+                      ? ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: filteredProducts
+                              .length, // Assume productList is a list of Product objects
+                          itemBuilder: (context, index) {
+                            final product = filteredProducts[index];
+                            return Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProductDetailPage(product: product),
+                                      ),
+                                    );
+                                  },
+                                  child: ProductCard(
+                                    product: product,
+                                  )),
                             );
                           },
-                          child: ProductCard(
-                            product: product,
-                          )),
-                    );
-                  },
-                  padding: const EdgeInsets.only(bottom: 5),
-                ),
-              ),
-              // The rest of your body content goes here
+                          padding: const EdgeInsets.only(bottom: 5),
+                        )
+                      : const Center(
+                          child: Text('No products found'),
+                        )
+                  // T
+                  ) // he rest of your body content goes here
             ],
           ),
         ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:greenhouse/src/utils/cart_utils.dart';
 
 import '../models/product.dart';
-import '../providers/cartProvider.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -49,18 +48,7 @@ class ProductCard extends StatelessWidget {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.add, size: 14),
-                        onPressed: () {
-                          // Access the cart provider and add the product
-                          Provider.of<CartProvider>(context, listen: false)
-                              .addProduct(product);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.name} added to cart'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
+                        onPressed: () => CartUtils.addToCart(context, product),
                       ),
                     ),
                   ],

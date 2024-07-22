@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/utils/cart_utils.dart';
 
 import '../../models/product.dart';
 
@@ -161,8 +162,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       backgroundColor: Colors.amber,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    onPressed: () {
-                      // Add your add to cart functionality here
+                    onPressed: () => {
+                      CartUtils.addToCart(context, widget.product, quantity),
+                      setState(() {
+                        quantity = 1;
+                      }),
                     },
                     child: const Text('Add to Cart'),
                   ),
