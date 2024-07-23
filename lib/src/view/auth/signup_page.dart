@@ -4,6 +4,7 @@ import 'package:greenhouse/src/main_screen.dart';
 import 'package:greenhouse/src/services/firebase_auth_service.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/auth/widget/bezierContainer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 FirebaseAuthService _authService = FirebaseAuthService();
 
@@ -82,37 +83,43 @@ class _SignUpPageState extends State<RegisterPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: const Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: const LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xff267310), Color(0xff3fb31e)])),
-      child: ElevatedButton(
-        onPressed: () async {
-          User? user = await _authService.signUpWithEmailPassword(
-              _emailController.text, _passwordController.text);
-          if (user != null) {
-            // Navigate to home page or dashboard
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
-          } else {
-            // Show error message
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text("Registration failed")));
-          }
-        },
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      onPressed: () async {
+        User? user = await _authService.signUpWithEmailPassword(
+            _emailController.text, _passwordController.text);
+        if (user != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('username', _usernameController.text);
+          // Navigate to home page or dashboard
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MainScreen()));
+        } else {
+          // Show error message
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Registration failed")));
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: const Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xff267310), Color(0xff3fb31e)])),
         child: const Text(
           'Register Now',
           style: TextStyle(fontSize: 20, color: Colors.white),
@@ -158,19 +165,19 @@ class _SignUpPageState extends State<RegisterPage> {
     return RichText(
       textAlign: TextAlign.center,
       text: const TextSpan(
-          text: 'd',
+          text: 'Gre',
           style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.w700,
-              color: Color(0xffe46b10)),
+              color: Color(0xff3fb31e)),
           children: [
             TextSpan(
-              text: 'ev',
+              text: 'en Ho',
               style: TextStyle(color: Colors.black, fontSize: 30),
             ),
             TextSpan(
-              text: 'rnz',
-              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+              text: 'use',
+              style: TextStyle(color: Color(0xff267310), fontSize: 30),
             ),
           ]),
     );

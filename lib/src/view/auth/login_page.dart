@@ -67,34 +67,38 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: const Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: const LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xff267310), Color(0xff3fb31e)])),
-      child: ElevatedButton(
-        onPressed: () async {
-          User? user = await _authService.signInWithEmailPassword(
-              _emailController.text, _passwordController.text);
-          if (user != null) {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const MainScreen()));
-          } else {
-            //error
-          }
-        },
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      onPressed: () async {
+        User? user = await _authService.signInWithEmailPassword(
+            _emailController.text, _passwordController.text);
+        if (user != null) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const MainScreen()));
+        } else {
+          //error
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: const EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: const Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: const LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [Color(0xff267310), Color(0xff3fb31e)])),
         child: const Text(
           'Login',
           style: TextStyle(fontSize: 20, color: Colors.white),

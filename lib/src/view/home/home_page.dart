@@ -6,6 +6,7 @@ import 'package:greenhouse/src/view/home/view/category_tab.dart';
 import 'package:greenhouse/src/view/home/view/recommended_section.dart';
 import 'package:greenhouse/src/view/home/view/searchbar.dart';
 import 'package:greenhouse/src/widgets/product_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,13 +76,19 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    Future<String> _loadUsername() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString('username') ??
+          'User'; // Default to 'User' if not found
+    }
+
     return SafeArea(
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -89,13 +96,27 @@ class _HomePageState extends State<HomePage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('Hello, Anwar',
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold)),
-                      Text('Welcome back', style: TextStyle(fontSize: 16)),
+                      // Use a FutureBuilder as shown in the ProfilePage example
+                      FutureBuilder<String>(
+                        future: _loadUsername(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              'Hello, ${snapshot.data}!', // Customize this text as needed
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            );
+                          } else {
+                            return const CircularProgressIndicator(); // Show loading indicator while loading the username
+                          }
+                        },
+                      ),
+                      const Text('Welcome back',
+                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 18.0,
                     backgroundImage: NetworkImage(
                         'https://randomuser.me/api/portraits/women/93.jpg'),

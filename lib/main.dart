@@ -15,51 +15,38 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  bool seenOnboarding = await checkFirstTime();
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartProvider(),
-      child: MyApp(), // Your main app widget
+      child: MyApp(seenOnboarding: seenOnboarding), // Your main app widget
     ),
   );
 }
 
-// Future<bool> checkFirstTime() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   return prefs.getBool('seenOnboarding') ?? false;
-// }
-//
-// Future<void> setSeenOnboarding() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   await prefs.setBool('seenOnboarding', true);
-// }
+Future<bool> checkFirstTime() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('seenOnboarding') ?? false;
+}
+
+Future<void> setSeenOnboarding() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('seenOnboarding', true);
+}
 
 class MyApp extends StatelessWidget {
+  final bool seenOnboarding;
+  const MyApp({super.key, required this.seenOnboarding});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FutureBuilder(
-        future: _getStartupScreen(),
-        builder: (context, AsyncSnapshot<Widget> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Or some other loading widget
-          }
-          return snapshot.data ??
-              const SizedBox(); // Fallback to an empty widget or loading screen
-        },
-      ),
+      debugShowCheckedModeBanner: false,
+      home: seenOnboarding
+          ? (FirebaseAuth.instance.currentUser == null
+              ? LoginPage()
+              : const MainScreen())
+          : const OnboardingPage(),
     );
-  }
-
-  Future<Widget> _getStartupScreen() async {
-    final prefs = await SharedPreferences.getInstance();
-    final seenOnboarding = prefs.getBool('seenOnboarding') ?? false;
-
-    if (!seenOnboarding) {
-      return const OnboardingPage(); // Replace with your OnboardingPage widget
-    } else if (FirebaseAuth.instance.currentUser == null) {
-      return LoginPage(); // Replace with your LoginPage widget
-    } else {
-      return const MainScreen(); // Replace with your MainScreen widget
-    }
   }
 }

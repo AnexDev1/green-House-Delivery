@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
+import 'package:greenhouse/main.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/auth/signup_page.dart';
 
@@ -13,10 +14,11 @@ class OnboardingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return OnBoardingSlider(
       finishButtonText: 'Register',
-      onFinish: () {
-        Navigator.push(
+      onFinish: () async {
+        await setSeenOnboarding();
+        Navigator.pushReplacement(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => RegisterPage(),
           ),
         );
