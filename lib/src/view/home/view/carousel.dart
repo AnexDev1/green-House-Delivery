@@ -14,20 +14,13 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
   int _currentIndex = 0;
   final List<PromoItem> promoList = [
     PromoItem(
-      text: "You get 20% discount on every order",
-      imageUrl:
-          "https://img.freepik.com/free-psd/fresh-beef-burger-isolated-transparent-background_191095-9018.jpg?w=740&t=st=1721111253~exp=1721111853~hmac=095f0ed553bca81f5528220891cad1e6514a96c14993671776ab697550741cd8",
-    ),
+        text: "You get 20% discount on every order", imageUrl: "assets/1.png"),
     PromoItem(
-      text: "You get 20% discount on every order",
-      imageUrl:
-          "https://w7.pngwing.com/pngs/369/24/png-transparent-hamburger-chicken-sandwich-veggie-burger-fast-food-burger-king-food-recipe-fast-food-restaurant-thumbnail.png",
-    ),
+        text: "Savor the taste of Italy pizzas at 20% discount",
+        imageUrl: "assets/2.png"),
     PromoItem(
-      text: "You get 20% discount on every order",
-      imageUrl:
-          "https://w7.pngwing.com/pngs/369/24/png-transparent-hamburger-chicken-sandwich-veggie-burger-fast-food-burger-king-food-recipe-fast-food-restaurant-thumbnail.png",
-    ),
+        text: "Enjoy 20% off! and Refresh with our ice coffee",
+        imageUrl: "assets/3.png"),
     // Add more items here
   ];
   final CarouselController _carouselController = CarouselController();
@@ -37,7 +30,7 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-              height: 150.0,
+              height: 200.0,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index, reason) {
                 setState(
@@ -69,8 +62,10 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                         ),
                         Expanded(
                           flex: 3,
-                          child:
-                              Image.network(item.imageUrl, fit: BoxFit.cover),
+                          child: Transform.scale(
+                              scale: 1.2,
+                              child: Image.asset(item.imageUrl,
+                                  fit: BoxFit.cover)),
                         ),
                       ],
                     ),
