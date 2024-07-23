@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboarding_slider/flutter_onboarding_slider.dart';
 import 'package:greenhouse/main.dart';
@@ -43,9 +42,9 @@ class OnboardingPage extends StatelessWidget {
         ),
       ),
       trailingFunction: () {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          CupertinoPageRoute(
+          MaterialPageRoute(
             builder: (context) => LoginPage(),
           ),
         );
