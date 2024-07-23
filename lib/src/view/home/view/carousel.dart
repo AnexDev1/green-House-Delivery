@@ -39,7 +39,9 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                   },
                 );
               },
-              viewportFraction: 1.0),
+              viewportFraction: 1.0,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 3)),
           items: promoList
               .map(
                 (item) => Container(
@@ -57,7 +59,9 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                           child: Text(
                             item.text,
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                              fontSize: 20,
+                              fontWeight: FontWeight.w200,
+                            ),
                           ),
                         ),
                         Expanded(
