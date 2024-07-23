@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:greenhouse/src/utils/cart_utils.dart';
 
 import '../models/product.dart';
-import '../providers/cartProvider.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -15,6 +14,7 @@ class ProductCard extends StatelessWidget {
       color: Colors.grey[100],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(15.0),
@@ -22,23 +22,23 @@ class ProductCard extends StatelessWidget {
               tag:
                   'product-hero-${product.id}', // Ensure this tag is unique for each product
               child: Image.network(product.imageUrl,
-                  height: 110, fit: BoxFit.cover),
+                  height: 100, width: 160, fit: BoxFit.cover),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       product.name,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      width: 40,
+                          fontSize: 14, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Container(
                       width: 30,
@@ -49,18 +49,7 @@ class ProductCard extends StatelessWidget {
                       ),
                       child: IconButton(
                         icon: const Icon(Icons.add, size: 14),
-                        onPressed: () {
-                          // Access the cart provider and add the product
-                          Provider.of<CartProvider>(context, listen: false)
-                              .addProduct(product);
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${product.name} added to cart'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
+                        onPressed: () => CartUtils.addToCart(context, product),
                       ),
                     ),
                   ],

@@ -1,51 +1,33 @@
 class Product {
+  final String id;
   final String imageUrl;
   final String name;
   final double rating;
   final double price;
   final String category;
-   String id;
+  final bool isPopular;
 
   Product({
+    required this.id,
     required this.imageUrl,
     required this.name,
     required this.rating,
     required this.price,
     required this.category,
-    String? id,
-  }): id = id ?? DateTime.now().millisecondsSinceEpoch.toString();
+    required this.isPopular,
+  });
+
+  factory Product.fromMap(Map<dynamic, dynamic> data) {
+    return Product(
+      id: data['id'],
+      imageUrl: data['imageUrl'],
+      name: data['name'],
+      rating: data.containsKey('rating') ? data['rating'].toDouble() : 0.0,
+      price: data['price'].toDouble(),
+      category: data['category'],
+      isPopular: data.containsKey('isPopular') ? data['isPopular'] : false,
+    );
+  }
 }
 
 // Mockup for the productList
-List<Product> productList = [
-  Product(
-
-    imageUrl: "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 1",
-    rating: 4.5,
-    price: 19.99,
-    category: "Popular",
-  ),
-  Product(
-    imageUrl: "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 2",
-    rating: 4.0,
-    price: 29.99,
-    category: "Pizza",
-  ),
-  Product(
-    imageUrl: "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 3",
-    rating: 5.0,
-    price: 9.99,
-    category: "Burger",
-  ),
-  Product(
-    imageUrl: "https://www.shutterstock.com/image-photo/burger-tomateoes-lettuce-pickles-on-600nw-2309539129.jpg",
-    name: "Product 4",
-    rating: 3.5,
-    price: 14.99,
-    category: "Drinks",
-  ),
-  // Add more products as needed
-];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/utils/cart_utils.dart';
 
 import '../../models/product.dart';
 
@@ -65,7 +66,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -90,7 +92,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10), // Increased space
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -137,36 +139,38 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 20), // Increased space
+                  const SizedBox(height: 20),
                   Text(
                     'About ${widget.product.name}',
                     style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 10), // Increased space
+                  const SizedBox(height: 20),
                   const Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
+                    'sed do eiusmod tempor incididunt ut labore et dolore'
+                    ' magna aliqua.',
+                    style: TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 20), // Increased space
+                  const SizedBox(
+                    height: 30,
+                  ), // This will push the button to the bottom
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    onPressed: () {
-                      // Add your add to cart functionality here
+                    onPressed: () => {
+                      CartUtils.addToCart(context, widget.product, quantity),
+                      setState(() {
+                        quantity = 1;
+                      }),
                     },
                     child: const Text('Add to Cart'),
                   ),
-                  // Add more product details here
                 ],
               ),
             ),

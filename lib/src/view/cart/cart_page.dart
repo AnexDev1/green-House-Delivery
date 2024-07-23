@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/widgets/cart_item.dart';
+import 'package:greenhouse/src/view/cart/view/cart_item.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/cart_item.dart';

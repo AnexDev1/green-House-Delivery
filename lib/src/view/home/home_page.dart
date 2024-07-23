@@ -1,28 +1,94 @@
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/widgets/carousel.dart';
-import 'package:greenhouse/src/widgets/product_card.dart';
+import 'package:greenhouse/src/models/product.dart';
+import 'package:greenhouse/src/services/firebase_database_service.dart';
+import 'package:greenhouse/src/view/home/view/carousel.dart';
+import 'package:greenhouse/src/view/home/view/category_tab.dart';
+import 'package:greenhouse/src/view/home/view/recommended_section.dart';
+import 'package:greenhouse/src/view/home/view/searchbar.dart';
+import 'package:greenhouse/src/widgets/product_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../models/product.dart';
-import '../product/product_detail_page.dart';
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
-  final List<String> imgList = [
-    'https://example.com/image1.jpg',
-    'https://example.com/image2.jpg',
-    'https://example.com/image3.jpg',
-    // Add more image URLs as needed
-  ];
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late Future<List<Product>> _productsFuture;
+  List<Product> _filteredProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    _productsFuture = FirebaseDatabaseService().fetchProducts();
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        _updateFilteredProducts();
+      }
+    });
+    _updateFilteredProducts(); // Initial update
+  }
+
+  void _updateFilteredProducts() async {
+    final products = await _productsFuture;
+    setState(() {
+      String selectedCategory = getCurrentCategory();
+      if (selectedCategory == 'Popular') {
+        _filteredProducts =
+            products.where((product) => product.isPopular).toList();
+      } else {
+        _filteredProducts = products
+            .where((product) =>
+                product.category.toLowerCase() ==
+                selectedCategory.toLowerCase())
+            .toList();
+      }
+    });
+  }
+
+  String getCurrentCategory() {
+    if (_tabController.index == 0) {
+      return 'Popular';
+    } else {
+      switch (_tabController.index) {
+        case 1:
+          return 'Pizza';
+        case 2:
+          return 'Burger';
+        case 3:
+          return 'Drinks';
+        default:
+          return 'Popular';
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Future<String> _loadUsername() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      return prefs.getString('username') ??
+          'User'; // Default to 'User' if not found
+    }
+
     return SafeArea(
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.0),
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -30,22 +96,28 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text(
-                        'Hello, Anwar',
-                        style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight
-                                .bold), // Adjusted for better fit in AppBar
+                      // Use a FutureBuilder as shown in the ProfilePage example
+                      FutureBuilder<String>(
+                        future: _loadUsername(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                              'Hello, ${snapshot.data}!', // Customize this text as needed
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            );
+                          } else {
+                            return const CircularProgressIndicator(); // Show loading indicator while loading the username
+                          }
+                        },
                       ),
-                      Text(
-                        'Welcome back',
-                        style: TextStyle(
-                            fontSize: 16), // Adjusted for better fit in AppBar
-                      ),
+                      const Text('Welcome back',
+                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
-                  CircleAvatar(
-                    radius: 18.0, // Adjusted for better fit in AppBar
+                  const CircleAvatar(
+                    radius: 18.0,
                     backgroundImage: NetworkImage(
                         'https://randomuser.me/api/portraits/women/93.jpg'),
                     backgroundColor: Colors.transparent,
@@ -53,101 +125,43 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            titleSpacing: 0, // Reduces the default spacing
+            titleSpacing: 0,
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search...',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.filter_list),
-                      onPressed: () {
-                        // Implement filter logic
-                      },
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SearchBarWidget(),
+                const VerticalImageCarousel(),
+                const Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Category', style: TextStyle(fontSize: 20)),
+                    ],
                   ),
                 ),
-              ),
-              const VerticalImageCarousel(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Category', style: TextStyle(fontSize: 20)),
-                    TextButton(
-                      onPressed: () {
-                        // Implement See All logic
-                      },
-                      child: const Text('See All'),
-                    ),
-                  ],
-                ),
-              ),
-              const TabBar(
-                dividerHeight: 0,
-                tabAlignment: TabAlignment.start,
-                isScrollable: true,
-                tabs: [
-                  Tab(text: 'Popular'),
-                  Tab(text: 'Pizza'),
-                  Tab(text: 'Burger'),
-                  Tab(text: 'Drinks'),
-                ],
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Recommended For You',
-                        style: TextStyle(fontSize: 20)),
-                    TextButton(
-                      onPressed: () {
-                        // Implement See All logic
-                      },
-                      child: const Text('See All'),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: productList
-                      .length, // Assume productList is a list of Product objects
-                  itemBuilder: (context, index) {
-                    final product = productList[index];
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductDetailPage(product: product),
-                              ),
-                            );
-                          },
-                          child: ProductCard(
-                            product: product,
-                          )),
-                    );
+                CategoryTabBar(controller: _tabController),
+                FutureBuilder<List<Product>>(
+                  future: _productsFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return const Text('Error fetching products');
+                    } else {
+                      _filteredProducts = snapshot.data ?? [];
+                      return RecommendedSection(
+                        currentCategory: getCurrentCategory(),
+                        filteredProducts: _filteredProducts,
+                      );
+                    }
                   },
-                  padding: const EdgeInsets.only(bottom: 5),
                 ),
-              ),
-              // The rest of your body content goes here
-            ],
+                ProductList(filteredProducts: _filteredProducts),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,0 +1,103 @@
+{
+  "products": {
+    "product1": {
+      "id": "1",
+      "name": "Pizza Margherita",
+      "description": "Classic Margherita with fresh mozzarella and basil.",
+      "price": 5.99,
+      "category": "Pizza",
+      "rating": 4.6,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product10": {
+      "id": "10",
+      "name": "Sparkling Water",
+      "description": "Refreshing sparkling water with a hint of fruit flavor.",
+      "price": 2.49,
+      "category": "Drinks",
+      "rating": 4.2,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product2": {
+      "id": "2",
+      "name": "Cheeseburger",
+      "description": "Classic cheeseburger with beef patty, cheddar cheese, lettuce, tomato, onion, and pickles.",
+      "price": 8.49,
+      "category": "Burger",
+      "rating": 4.2,
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
+      "isPopular": false
+    },
+    "product3": {
+      "id": "3",
+      "name": "Hawaiian Pizza",
+      "description": "Pizza topped with ham and pineapple chunks.",
+      "price": 6.99,
+      "category": "Pizza",
+      "rating": 4.1,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product4": {
+      "id": "4",
+      "name": "Veggie Burger",
+      "description": "Burger with a veggie patty, lettuce, tomato, onion, and avocado spread.",
+      "price": 7.99,
+      "category": "Burger",
+      "rating": 4.5,
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
+      "isPopular": false
+    },
+    "product5": {
+      "id": "5",
+      "name": "Iced Coffee",
+      "description": "Coffee brewed hot and chilled over ice.",
+      "price": 3.49,
+      "category": "Drinks",
+      "rating": 4.1,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product6": {
+      "id": "6",
+      "name": "Chicken Caesar Salad",
+      "description": "Salad with grilled chicken, romaine lettuce, croutons, parmesan cheese, and Caesar dressing.",
+      "price": 8.99,
+      "category": "Burger",
+      "rating": 4.7,
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
+      "isPopular": false
+    },
+    "product7": {
+      "id": "7",
+      "name": "Chocolate Milkshake",
+      "description": "Rich and creamy chocolate milkshake.",
+      "price": 4.49,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product8": {
+      "id": "8",
+      "name": "Spicy Chicken Burger",
+      "description": "Burger with a spicy chicken patty, lettuce, tomato, onion, and jalapeno mayo.",
+      "price": 8.99,
+      "category": "Burger",
+      "rating": 4.6,
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
+      "isPopular": false
+    },
+    "product9": {
+      "id": "9",
+      "name": "Pepperoni Pizza",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 6.49,
+      "category": "Pizza",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    }
+  }}
