@@ -1,9 +1,21 @@
+import 'dart:math';
+
+import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/view/cart_item.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/cart_item.dart';
 import '../../providers/cartProvider.dart';
+
+String generateTxRef(String prefix) {
+  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  final randomSuffix = Random()
+      .nextInt(9999)
+      .toString()
+      .padLeft(4, '0'); // Ensures a 4-digit random number
+  return '$prefix-$timestamp-$randomSuffix';
+}
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -122,9 +134,32 @@ class _CartPageState extends State<CartPage> {
                     minimumSize:
                         const Size.fromHeight(50), // Set the button height
                   ),
-                  onPressed: () {
-                    // Implement your payment logic here
-                    print('Proceeding to payment');
+                  onPressed: () async {
+                    // Assuming totalPrice is calculated elsewhere in your code.
+                    final double totalAmount =
+                        totalPrice; // Use your totalPrice calculation logic here
+                    String txRef = generateTxRef(
+                        'green-house'); // Implement your transaction reference generator
+
+                    await Chapa.getInstance.startPayment(
+                      context: context,
+                      amount: totalAmount.toString(),
+                      currency: 'ETB',
+                      txRef: txRef,
+                      onInAppPaymentSuccess: (successMsg) {
+                        // Handle successful payment here
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const CartPage(),
+                          ),
+                        );
+                        print("Payment Success: $successMsg");
+                      },
+                      onInAppPaymentError: (errorMsg) {
+                        // Handle payment error here
+                        print("Payment Error: $errorMsg");
+                      },
+                    );
                   },
                   child: const Text('Pay', style: TextStyle(fontSize: 18)),
                 ),

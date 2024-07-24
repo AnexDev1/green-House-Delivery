@@ -1,3 +1,4 @@
+import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   bool seenOnboarding = await checkFirstTime();
-
+  Chapa.configure(privateKey: "CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb");
   runApp(
     ChangeNotifierProvider(
       create: (context) => CartProvider(),
@@ -47,6 +48,25 @@ class MyApp extends StatelessWidget {
               ? LoginPage()
               : const MainScreen())
           : const OnboardingPage(),
+      routes: {
+        '/checkoutPage': (context) => const CheckoutPage(),
+      },
+    );
+  }
+}
+
+class CheckoutPage extends StatelessWidget {
+  const CheckoutPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Checkout'),
+      ),
+      body: Center(
+        child: Text('Checkout Page Content Goes Here'),
+      ),
     );
   }
 }
