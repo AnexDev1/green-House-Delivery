@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/view/cart_item.dart';
+import 'package:greenhouse/src/view/order/payment_success.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/cart_item.dart';
@@ -150,9 +151,12 @@ class _CartPageState extends State<CartPage> {
                         // Handle successful payment here
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => const CartPage(),
+                            builder: (context) => ThankYouPage(
+                                txRef: txRef, amount: totalAmount.toString()),
                           ),
                         );
+                        Provider.of<CartProvider>(context, listen: false)
+                            .clearCart();
                         print("Payment Success: $successMsg");
                       },
                       onInAppPaymentError: (errorMsg) {

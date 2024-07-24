@@ -27,5 +27,10 @@ class CartProvider with ChangeNotifier {
     _items.removeWhere((cartItem) => cartItem.name == item.name);
     notifyListeners();
   }
+
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
 // Add other cart functionalities as needed
 }
