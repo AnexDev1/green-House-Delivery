@@ -1,13 +1,45 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../providers/cartProvider.dart';
 import '../../order/payment_success.dart';
+
+class PaymentService {
+  Future<void> verifyPayment(String transactionId) async {
+    var headers = {
+      'Authorization': 'Bearer CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb'
+    };
+    var request = http.Request('GET',
+        Uri.parse('https://api.chapa.co/v1/transaction/verify/$transactionId'));
+    request.body = '''''';
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      final jsonResponse = await response.stream.bytesToString();
+      var parsedResponse = json.decode(jsonResponse);
+      DatabaseReference ref = FirebaseDatabase.instance.ref('payments');
+      await ref.push().set(parsedResponse['data']).then((_) {
+        print('Document added');
+      }).catchError((error) {
+        print('Error adding document: $error');
+      });
+
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+}
 
 String generateTxRef(String prefix) {
   final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -127,7 +159,7 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
               amount: totalAmount.toString(),
               currency: 'ETB',
               txRef: txRef,
-              onInAppPaymentSuccess: (successMsg) {
+              onInAppPaymentSuccess: (successMsg) async {
                 // Handle successful payment here
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -137,6 +169,10 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
                 );
                 Provider.of<CartProvider>(context, listen: false).clearCart();
                 print("Payment Success: $successMsg");
+
+                // Verify payment
+                PaymentService paymentService = PaymentService();
+                await paymentService.verifyPayment(txRef);
               },
               onInAppPaymentError: (errorMsg) {
                 // Handle payment error here
