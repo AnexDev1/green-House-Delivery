@@ -29,12 +29,6 @@ class _ProfilePageState extends State<ProfilePage> {
         'User'; // Default to 'User' if not found
   }
 
-  // Future<String> _loadPhoneNumber() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   return prefs.getString('phoneNum') ??
-  //       '09 ** ** ** **'; // Default to 'number' if not found
-  // }
-
   @override
   Widget build(BuildContext context) {
     String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
