@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage>
   late Future<List<Product>> _productsFuture;
   List<Product> _filteredProducts = [];
   String username = 'Loading...';
+
   Future<String> _loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username') ??
