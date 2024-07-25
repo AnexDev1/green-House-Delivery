@@ -19,6 +19,7 @@ class RegisterPage extends StatefulWidget {
 
 class _SignUpPageState extends State<RegisterPage> {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -32,6 +33,7 @@ class _SignUpPageState extends State<RegisterPage> {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -73,6 +75,7 @@ class _SignUpPageState extends State<RegisterPage> {
         if (user != null) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('username', _usernameController.text);
+          await prefs.setString('phoneNum', _phoneNumberController.text);
           // Navigate to home page or dashboard
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => const MainScreen()));
@@ -165,8 +168,9 @@ class _SignUpPageState extends State<RegisterPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username", _usernameController),
-        _entryField("Email id", _emailController),
+        _entryField("full Name", _usernameController),
+        _entryField("phone Number", _phoneNumberController),
+        _entryField("Email", _emailController),
         _entryField("Password", _passwordController, isPassword: true),
       ],
     );

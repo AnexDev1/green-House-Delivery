@@ -11,14 +11,34 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Future<String> _loadUsername() async {
+  String _username = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername().then((loadedUsername) {
+      setState(() {
+        _username = loadedUsername;
+      });
+    });
+  }
+
+  Future<String> loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username') ??
         'User'; // Default to 'User' if not found
   }
 
+  Future<String> _loadPhoneNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('phoneNum') ??
+        '09 ** ** ** **'; // Default to 'number' if not found
+  }
+
   @override
   Widget build(BuildContext context) {
+    String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -36,27 +56,18 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
 
 // Replace the static text with a FutureBuilder to load the username
-            FutureBuilder<String>(
-              future: _loadUsername(),
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.hasData) {
-                  return Text(
-                    snapshot.data!,
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                } else {
-                  return CircularProgressIndicator(); // Show loading indicator while loading the username
-                }
-              },
+            Text(
+              _username,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
 
 // Method to load username from SharedPreference
             const SizedBox(height: 10),
             Text(
-              'anwarnas1252@gmail.com',
+              userEmail,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],

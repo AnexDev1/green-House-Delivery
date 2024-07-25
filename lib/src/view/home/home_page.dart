@@ -20,10 +20,21 @@ class _HomePageState extends State<HomePage>
   late TabController _tabController;
   late Future<List<Product>> _productsFuture;
   List<Product> _filteredProducts = [];
+  String username = 'Loading...';
+  Future<String> _loadUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username') ??
+        'User'; // Default to 'User' if not found
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadUsername().then((loadedUsername) {
+      setState(() {
+        username = loadedUsername;
+      });
+    });
     _tabController = TabController(length: 4, vsync: this);
     _productsFuture = FirebaseDatabaseService().fetchProducts();
     _tabController.addListener(() {
@@ -76,12 +87,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    Future<String> _loadUsername() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      return prefs.getString('username') ??
-          'User'; // Default to 'User' if not found
-    }
-
+    final firstName = username.split(" ")[0];
     return SafeArea(
       child: DefaultTabController(
         length: 4,
@@ -97,21 +103,12 @@ class _HomePageState extends State<HomePage>
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       // Use a FutureBuilder as shown in the ProfilePage example
-                      FutureBuilder<String>(
-                        future: _loadUsername(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(
-                              'Hello, ${snapshot.data}!', // Customize this text as needed
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            );
-                          } else {
-                            return const CircularProgressIndicator(); // Show loading indicator while loading the username
-                          }
-                        },
+                      Text(
+                        'Hello, $firstName', // Customize this text as needed
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
+
                       const Text('Welcome back',
                           style: TextStyle(fontSize: 16)),
                     ],
