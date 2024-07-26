@@ -48,6 +48,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (orders.isEmpty) {
+      return Center(
+        child: Text('No Orders'),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order History'),

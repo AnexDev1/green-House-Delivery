@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/cart_page.dart';
 import 'package:greenhouse/src/view/home/home_page.dart';
+import 'package:greenhouse/src/view/order/order_page.dart';
 import 'package:greenhouse/src/view/profile/profile_page.dart';
 
 class MainScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _widgetOptions = [
     HomePage(),
     const CartPage(),
+    OrderHistoryPage(),
     const ProfilePage() // Assuming HomePage is one of your pages
     // Add other pages here, e.g., SearchPage(), ProfilePage(), etc.
   ];
@@ -44,6 +46,10 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Cart',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.credit_card),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.person_2_sharp),
             label: 'Profile',
           ),
@@ -53,6 +59,7 @@ class _MainScreenState extends State<MainScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         selectedItemColor: Colors.amber[600],
+        unselectedItemColor: Colors.grey,
       ),
     );
   }
