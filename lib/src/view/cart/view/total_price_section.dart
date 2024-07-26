@@ -139,7 +139,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
           children: [
             const Text('Delivery Fee:',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            Text('${widget.deliveryFee.toStringAsFixed(2)} birr',
+            Text(
+                '${widget.cartItems.isEmpty ? '0.00' : widget.deliveryFee.toStringAsFixed(2)} birr',
                 style: const TextStyle(fontSize: 16)),
           ],
         ),
@@ -149,7 +150,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
           children: [
             const Text('Total:',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text('${widget.totalAmount.toStringAsFixed(2)} Birr',
+            Text(
+                '${widget.cartItems.isEmpty ? '0.00' : widget.totalAmount.toStringAsFixed(2)} Birr',
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           ],
@@ -162,8 +164,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
           ),
           onPressed: () async {
             // Assuming totalPrice is calculated elsewhere in your code.
-            final double totalAmount =
-                widget.totalPrice; // Use your totalPrice calculation logic here
+            final double totalAmount = widget
+                .totalAmount; // Use your totalPrice calculation logic here
             String txRef = generateTxRef(
                 'gh'); // Implement your transaction reference generator
 

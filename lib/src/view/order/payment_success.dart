@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/main_screen.dart';
+import 'package:greenhouse/src/view/order/order_page.dart';
 
 import 'home_button.dart';
 
@@ -77,10 +77,10 @@ class _ThankYouPageState extends State<ThankYouPage> {
             SizedBox(height: screenHeight * 0.06),
             Flexible(
               child: HomeButton(
-                title: 'Home',
+                title: 'Orders',
                 onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
+                    builder: (context) => const OrderHistoryPage(),
                   ),
                 ),
               ),
