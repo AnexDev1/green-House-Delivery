@@ -4,9 +4,13 @@ import '../models/cart_item.dart';
 import '../models/product.dart';
 
 class CartProvider with ChangeNotifier {
-  final List<CartItem> _items = [];
+  late List<CartItem> _items = [];
 
   List<CartItem> get items => _items;
+  void loadCart(List<CartItem> items) {
+    _items = items;
+    notifyListeners();
+  }
 
   void addProduct(Product product) {
     final existingIndex =

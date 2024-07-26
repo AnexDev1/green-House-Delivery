@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage>
                   future: _productsFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return Text('Loading..');
                     } else if (snapshot.hasError) {
                       return const Text('Error fetching products');
                     } else {

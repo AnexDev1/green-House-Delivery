@@ -40,9 +40,7 @@ class ProductList extends StatelessWidget {
                 },
                 padding: const EdgeInsets.only(bottom: 5),
               )
-            : const Center(
-                child: Text('No products found'),
-              )
+            : const Center(child: CircularProgressIndicator())
         // T
         );
   }

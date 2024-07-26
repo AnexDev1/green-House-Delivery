@@ -48,7 +48,13 @@ dependencies:
   chapa_unofficial: ^0.0.3
   flutter_svg: ^2.0.9
 
+
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon.png"
   flutter_test:
     sdk: flutter
 

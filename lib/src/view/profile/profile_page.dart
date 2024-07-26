@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/providers/cartProvider.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart'; // Ensure you have the correct path for your LoginPage
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -72,6 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
             ElevatedButton(
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
+                Provider.of<CartProvider>(context, listen: false).clearCart();
+
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => LoginPage()));
               },

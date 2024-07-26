@@ -38,11 +38,6 @@ class _CartPageState extends State<CartPage> {
         totalPrice; // Assuming totalPrice is calculated elsewhere in your code.
     final double totalAmount = itemsTotalPrice + deliveryFee;
 
-    if (cartItems.isEmpty) {
-      return const Center(
-        child: Text('No items in cart'),
-      );
-    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -55,7 +50,11 @@ class _CartPageState extends State<CartPage> {
               itemCount: cartItems.length,
               itemBuilder: (context, index) {
                 final item = cartItems[index];
-
+                if (cartItems.isEmpty) {
+                  return const Center(
+                    child: Text('No items in cart'),
+                  );
+                }
                 return CartItemWidget(
                   item: item,
                   onRemove: () {
