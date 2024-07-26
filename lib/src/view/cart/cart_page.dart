@@ -20,11 +20,9 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     // This is moved to initState to ensure it's only called once when the widget is inserted into the widget tree.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cartProvider = Provider.of<CartProvider>(context, listen: false);
-      setState(() {
-        cartItems = cartProvider.items;
-      });
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    setState(() {
+      cartItems = cartProvider.items;
     });
   }
 
@@ -81,6 +79,7 @@ class _CartPageState extends State<CartPage> {
           Container(
             padding: const EdgeInsets.all(16.0),
             child: TotalPriceSection(
+                cartItems: cartItems,
                 itemsTotalPrice: itemsTotalPrice,
                 deliveryFee: deliveryFee,
                 totalAmount: totalAmount,

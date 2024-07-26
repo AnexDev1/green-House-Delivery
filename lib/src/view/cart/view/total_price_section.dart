@@ -8,20 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../providers/cartProvider.dart';
 import '../../order/payment_success.dart';
 
 String username = '';
 String phoneNumber = '';
 String? userEmail = '';
-List<CartItem> cartItems = [];
 String orderTime = '';
 
 class PaymentService {
-  Future<void> verifyPayment(BuildContext context, String transactionId) async {
+  Future<void> verifyPayment(BuildContext context, String transactionId,
+      List<CartItem> cartItems) async {
     var headers = {
       'Authorization': 'Bearer CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb'
     };
@@ -36,7 +34,7 @@ class PaymentService {
       final jsonResponse = await response.stream.bytesToString();
       var parsedResponse = json.decode(jsonResponse);
       var paymentData = parsedResponse['data'];
-
+      print(cartItems);
       var orderData = {
         'paymentData': paymentData,
         'cartItems': cartItems
@@ -85,18 +83,19 @@ Future<String> _loadPhoneNumber() async {
 }
 
 class TotalPriceSection extends StatefulWidget {
-  const TotalPriceSection({
-    super.key,
-    required this.itemsTotalPrice,
-    required this.deliveryFee,
-    required this.totalAmount,
-    required this.totalPrice,
-  });
+  const TotalPriceSection(
+      {super.key,
+      required this.itemsTotalPrice,
+      required this.deliveryFee,
+      required this.totalAmount,
+      required this.totalPrice,
+      required this.cartItems});
 
   final double itemsTotalPrice;
   final double deliveryFee;
   final double totalAmount;
   final double totalPrice;
+  final List<CartItem> cartItems;
 
   @override
   State<TotalPriceSection> createState() => _TotalPriceSectionState();
@@ -114,7 +113,6 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
           phoneNumber = loadedPhoneNumber;
         });
       });
-      cartItems = Provider.of<CartProvider>(context, listen: false).items;
 
       userEmail = FirebaseAuth.instance.currentUser?.email;
       orderTime = DateFormat('yyy-MM-dd HH:mm:ss').format(DateTime.now());
@@ -185,12 +183,12 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
                         txRef: txRef, amount: totalAmount.toString()),
                   ),
                 );
-                Provider.of<CartProvider>(context, listen: false).clearCart();
                 print("Payment Success: $successMsg");
 
                 // Verify payment
                 PaymentService paymentService = PaymentService();
-                await paymentService.verifyPayment(context, txRef);
+                await paymentService.verifyPayment(
+                    context, txRef, widget.cartItems);
               },
               onInAppPaymentError: (errorMsg) {
                 // Handle payment error here
