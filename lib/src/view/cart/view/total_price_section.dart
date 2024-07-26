@@ -5,15 +5,23 @@ import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/models/cart_item.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../providers/cartProvider.dart';
 import '../../order/payment_success.dart';
 
+String username = '';
+String phoneNumber = '';
+String? userEmail = '';
+List<CartItem> cartItems = [];
+String orderTime = '';
+
 class PaymentService {
-  Future<void> verifyPayment(String transactionId) async {
+  Future<void> verifyPayment(BuildContext context, String transactionId) async {
     var headers = {
       'Authorization': 'Bearer CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb'
     };
@@ -27,8 +35,22 @@ class PaymentService {
     if (response.statusCode == 200) {
       final jsonResponse = await response.stream.bytesToString();
       var parsedResponse = json.decode(jsonResponse);
+      var paymentData = parsedResponse['data'];
+
+      var orderData = {
+        'paymentData': paymentData,
+        'cartItems': cartItems
+            .map((item) => {
+                  'name': item.name,
+                  'price': item.price,
+                  'quantity': item.quantity,
+                })
+            .toList(),
+        'userEmail': userEmail,
+        'orderTime': orderTime,
+      };
       DatabaseReference ref = FirebaseDatabase.instance.ref('payments');
-      await ref.push().set(parsedResponse['data']).then((_) {
+      await ref.push().set(orderData).then((_) {
         print('Document added');
       }).catchError((error) {
         print('Error adding document: $error');
@@ -50,8 +72,6 @@ String generateTxRef(String prefix) {
   return '$prefix-$timestamp-$randomSuffix';
 }
 
-String username = '';
-String phoneNumber = '';
 Future<String> _loadUsername() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('username') ??
@@ -62,12 +82,6 @@ Future<String> _loadPhoneNumber() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getString('phoneNum') ??
       '09 ** ** ** **'; // Default to 'number' if not found
-}
-
-String? getEmailFromCurrentUser() {
-  final user = FirebaseAuth.instance.currentUser;
-  return user
-      ?.email; // This will return the email or null if no user is logged in
 }
 
 class TotalPriceSection extends StatefulWidget {
@@ -100,6 +114,10 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
           phoneNumber = loadedPhoneNumber;
         });
       });
+      cartItems = Provider.of<CartProvider>(context, listen: false).items;
+
+      userEmail = FirebaseAuth.instance.currentUser?.email;
+      orderTime = DateFormat('yyy-MM-dd HH:mm:ss').format(DateTime.now());
     });
     super.initState();
   }
@@ -172,7 +190,7 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
 
                 // Verify payment
                 PaymentService paymentService = PaymentService();
-                await paymentService.verifyPayment(txRef);
+                await paymentService.verifyPayment(context, txRef);
               },
               onInAppPaymentError: (errorMsg) {
                 // Handle payment error here
