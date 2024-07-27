@@ -11,18 +11,19 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 2,
       color: Colors.grey[100],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(10.0),
             child: Hero(
               tag:
                   'product-hero-${product.id}', // Ensure this tag is unique for each product
               child: Image.network(product.imageUrl,
-                  height: 100, width: 160, fit: BoxFit.cover),
+                  height: 80, width: 170, fit: BoxFit.cover),
             ),
           ),
           Padding(
@@ -30,51 +31,43 @@ class ProductCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      product.name,
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(6.0),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.add, size: 14),
-                        onPressed: () => CartUtils.addToCart(context, product),
-                      ),
-                    ),
-                  ],
+                Text(
+                  product.name,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: Row(
                     children: [
-                      const Icon(Icons.star, size: 14, color: Colors.yellow),
+                      Icon(
+                        Icons.star,
+                        size: 15,
+                        color: Color(0xff3fb31e),
+                      ),
                       const SizedBox(width: 5),
                       Text(
                         '${product.rating}',
-                        style: const TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 15),
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
+                Text(
+                  '${product.price.toStringAsFixed(2)} Birr',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff3fb31e)),
+                  onPressed: () => CartUtils.addToCart(context, product),
                   child: Text(
-                    '${product.price.toStringAsFixed(2)} Birr',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    'Add to Cart',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

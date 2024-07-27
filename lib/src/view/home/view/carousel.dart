@@ -30,7 +30,7 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-              height: 200.0,
+              height: 180.0,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index, reason) {
                 setState(
@@ -47,7 +47,9 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                 (item) => Container(
                   margin: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    gradient: const LinearGradient(
+                      colors: [Color(0xff3fb31e), Color(0xff267310)],
+                    ),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Padding(
@@ -60,6 +62,7 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                             item.text,
                             style: const TextStyle(
                               fontSize: 20,
+                              color: Colors.white,
                               fontWeight: FontWeight.w200,
                             ),
                           ),
@@ -93,7 +96,7 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: _currentIndex == entry.key
-                        ? Colors.amber
+                        ? Color(0xff3fb31e)
                         : Colors.grey[400],
                   ),
                 ),

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
 import 'package:greenhouse/src/providers/cartProvider.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
-import 'package:greenhouse/src/view/home/view/onboarding/onboarding_page.dart';
+import 'package:greenhouse/src/view/onboarding/onboarding_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

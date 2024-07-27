@@ -159,7 +159,7 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
         const SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.amber,
+            backgroundColor: Color(0xff3fb31e),
             minimumSize: const Size.fromHeight(50), // Set the button height
           ),
           onPressed: () async {
@@ -198,7 +198,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
               },
             );
           },
-          child: const Text('Pay', style: TextStyle(fontSize: 18)),
+          child: const Text('Proceed to pay',
+              style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
       ],
     );

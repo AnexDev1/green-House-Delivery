@@ -83,7 +83,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       ),
                       Row(
                         children: [
-                          const Icon(Icons.star, size: 18, color: Colors.amber),
+                          const Icon(Icons.star,
+                              size: 18, color: Color(0xff3fb31e)),
                           Text(
                             '${widget.product.rating} (653 Reviews)',
                             style: const TextStyle(fontSize: 18),
@@ -127,14 +128,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             width: 25,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: Colors.amber,
-                              border: Border.all(color: Colors.amber),
+                              color: Color(0xff3fb31e),
+                              border: Border.all(color: Color(0xff3fb31e)),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               iconSize: 20,
-                              icon: const Icon(Icons.add, color: Colors.black),
+                              icon: const Icon(Icons.add, color: Colors.white),
                               onPressed: incrementQuantity,
                             ),
                           ),
@@ -160,7 +161,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ), // This will push the button to the bottom
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
+                      backgroundColor: Color(0xff3fb31e),
                       minimumSize: const Size(double.infinity, 50),
                     ),
                     onPressed: () => {
@@ -169,7 +170,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         quantity = 1;
                       }),
                     },
-                    child: const Text('Add to Cart'),
+                    child: const Text(
+                      'Add to Cart',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),

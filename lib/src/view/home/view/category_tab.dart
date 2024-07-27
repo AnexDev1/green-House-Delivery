@@ -10,8 +10,8 @@ class CategoryTabBar extends StatelessWidget {
       dividerHeight: 0,
       tabAlignment: TabAlignment.start,
       controller: controller,
-      labelColor: Colors.amber[600],
-      indicatorColor: Colors.amber[600],
+      labelColor: Color(0xff3fb31e),
+      indicatorColor: Color(0xff3fb31e),
       isScrollable: true,
       tabs: const [
         Tab(text: 'Popular'),

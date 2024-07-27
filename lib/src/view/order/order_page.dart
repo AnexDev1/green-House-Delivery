@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class OrderHistoryService {
   Future<List<Map<String, dynamic>>> fetchOrderHistory() async {
@@ -48,11 +49,6 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (orders.isEmpty) {
-      return Center(
-        child: Text('No Orders'),
-      );
-    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order History'),
@@ -63,20 +59,45 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
+                final DateTime orderDate = DateTime.parse(order['orderTime']);
+                final String formattedDate =
+                    DateFormat('dd MMM yyyy').format(orderDate);
+
                 return Card(
-                  margin: const EdgeInsets.all(8.0),
+                  color: Color(0xff3fb31e),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 10.0,
+                  ),
                   child: ListTile(
-                    title: Text('Order on ${order['orderTime']}'),
-                    subtitle: Column(
+                    title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Total: ${order['paymentData']['amount']} birr'),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              formattedDate,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 8.0),
-                        Text('Items:'),
-                        ...order['cartItems'].map<Widget>((item) {
-                          return Text(
-                              '${item['name']} - ${item['quantity']} x ${item['price']} birr');
-                        }).toList(),
+                        Text(
+                          'TxRef: ${order['paymentData']['reference']}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          'Amount: ${order['paymentData']['amount']} birr',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ],
                     ),
                     onTap: () {
