@@ -65,9 +65,16 @@ class ProductCard extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xff3fb31e)),
                   onPressed: () => CartUtils.addToCart(context, product),
-                  child: Text(
-                    'Add to Cart',
-                    style: TextStyle(color: Colors.white),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add_shopping_cart, color: Colors.white),
+                      const SizedBox(width: 5),
+                      const Text(
+                        'Add to Cart',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
                   ),
                 ),
               ],

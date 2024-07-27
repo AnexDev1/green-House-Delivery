@@ -17,11 +17,61 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isLoading = false;
+  String? _emailError;
+  String? _passwordError;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void _handleLoginOrSignup() async {
+    setState(() {
+      _isLoading = true;
+      _emailError = null;
+      _passwordError = null;
+    });
+
+    try {
+      // Validate input fields
+      if (_emailController.text.isEmpty) {
+        setState(() {
+          _emailError = "Email cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+      if (!_emailController.text.contains('@')) {
+        setState(() {
+          _emailError = "Invalid email address";
+        });
+        throw Exception("Validation failed");
+      }
+      if (_passwordController.text.isEmpty) {
+        setState(() {
+          _passwordError = "Password cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+
+      // Perform login operation
+      User? user = await _authService.signInWithEmailPassword(
+          _emailController.text, _passwordController.text);
+      if (user != null) {
+        // Navigate to home page or dashboard
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
+      } else {
+        throw Exception("Login failed");
+      }
+    } catch (e) {
+      // Handle error
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Widget _entryField(String title, TextEditingController controller,
-      {bool isPassword = false}) {
+      {bool isPassword = false, String? errorText}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -37,10 +87,11 @@ class _LoginPageState extends State<LoginPage> {
           TextField(
               controller: controller,
               obscureText: isPassword,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
-                  filled: true))
+                  filled: true,
+                  errorText: errorText))
         ],
       ),
     );
@@ -52,16 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      onPressed: () async {
-        User? user = await _authService.signInWithEmailPassword(
-            _emailController.text, _passwordController.text);
-        if (user != null) {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => const MainScreen()));
-        } else {
-          //error
-        }
-      },
+      onPressed: _isLoading ? null : _handleLoginOrSignup,
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -79,10 +121,16 @@ class _LoginPageState extends State<LoginPage> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [Color(0xff267310), Color(0xff3fb31e)])),
-        child: const Text(
-          'Login',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
+        child: _isLoading
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              )
+            : const Text(
+                'Login',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
       ),
     );
   }
@@ -226,8 +274,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email id", _emailController),
-        _entryField("Password", _passwordController, isPassword: true),
+        _entryField("Email id", _emailController, errorText: _emailError),
+        _entryField("Password", _passwordController,
+            isPassword: true, errorText: _passwordError),
       ],
     );
   }

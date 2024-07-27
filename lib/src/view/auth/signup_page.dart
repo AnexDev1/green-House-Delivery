@@ -18,10 +18,79 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<RegisterPage> {
+  bool _isLoading = false;
+  String? _usernameError;
+  String? _phoneNumberError;
+  String? _emailError;
+  String? _passwordError;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void _handleLoginOrSignup() async {
+    setState(() {
+      _isLoading = true;
+      _usernameError = null;
+      _phoneNumberError = null;
+      _emailError = null;
+      _passwordError = null;
+    });
+
+    try {
+      // Validate input fields
+      if (_usernameController.text.isEmpty) {
+        setState(() {
+          _usernameError = "Username cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+      if (_phoneNumberController.text.isEmpty) {
+        setState(() {
+          _phoneNumberError = "Phone number cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+      if (_emailController.text.isEmpty) {
+        setState(() {
+          _emailError = "Email cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+      if (!_emailController.text.contains('@')) {
+        setState(() {
+          _emailError = "Invalid email address";
+        });
+        throw Exception("Validation failed");
+      }
+      if (_passwordController.text.isEmpty) {
+        setState(() {
+          _passwordError = "Password cannot be empty";
+        });
+        throw Exception("Validation failed");
+      }
+
+      // Perform login or signup operation
+      User? user = await _authService.signUpWithEmailPassword(
+          _emailController.text, _passwordController.text);
+      if (user != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('username', _usernameController.text);
+        await prefs.setString('phoneNum', _phoneNumberController.text);
+        // Navigate to home page or dashboard
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
+      } else {
+        throw Exception("Registration failed");
+      }
+    } catch (e) {
+      // Handle error
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -38,7 +107,7 @@ class _SignUpPageState extends State<RegisterPage> {
   }
 
   Widget _entryField(String title, TextEditingController controller,
-      {bool isPassword = false}) {
+      {bool isPassword = false, String? errorText}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -54,10 +123,11 @@ class _SignUpPageState extends State<RegisterPage> {
           TextField(
               controller: controller,
               obscureText: isPassword,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
-                  filled: true))
+                  filled: true,
+                  errorText: errorText))
         ],
       ),
     );
@@ -69,22 +139,7 @@ class _SignUpPageState extends State<RegisterPage> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      onPressed: () async {
-        User? user = await _authService.signUpWithEmailPassword(
-            _emailController.text, _passwordController.text);
-        if (user != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('username', _usernameController.text);
-          await prefs.setString('phoneNum', _phoneNumberController.text);
-          // Navigate to home page or dashboard
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const MainScreen()));
-        } else {
-          // Show error message
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Registration failed")));
-        }
-      },
+      onPressed: _isLoading ? null : _handleLoginOrSignup,
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -102,10 +157,16 @@ class _SignUpPageState extends State<RegisterPage> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [Color(0xff267310), Color(0xff3fb31e)])),
-        child: const Text(
-          'Register Now',
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
+        child: _isLoading
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              )
+            : const Text(
+                'Register Now',
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
       ),
     );
   }
@@ -168,10 +229,13 @@ class _SignUpPageState extends State<RegisterPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("full Name", _usernameController),
-        _entryField("phone Number", _phoneNumberController),
-        _entryField("Email", _emailController),
-        _entryField("Password", _passwordController, isPassword: true),
+        _entryField("Full Name", _usernameController,
+            errorText: _usernameError),
+        _entryField("Phone Number", _phoneNumberController,
+            errorText: _phoneNumberError),
+        _entryField("Email", _emailController, errorText: _emailError),
+        _entryField("Password", _passwordController,
+            isPassword: true, errorText: _passwordError),
       ],
     );
   }

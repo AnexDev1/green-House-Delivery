@@ -58,7 +58,7 @@ class _MainScreenState extends State<MainScreen> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: Colors.amber[600],
+        selectedItemColor: Color(0xff3fb31e),
         unselectedItemColor: Colors.grey,
       ),
     );
