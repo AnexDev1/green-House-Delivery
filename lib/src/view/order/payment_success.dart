@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
+import 'package:greenhouse/src/providers/cartProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'home_button.dart';
 
@@ -78,11 +80,14 @@ class _ThankYouPageState extends State<ThankYouPage> {
             Flexible(
               child: HomeButton(
                 title: 'Orders',
-                onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ),
-                ),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                    ),
+                  );
+                  Provider.of<CartProvider>(context, listen: false).clearCart();
+                },
               ),
             ),
           ],

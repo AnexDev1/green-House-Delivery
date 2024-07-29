@@ -61,8 +61,24 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         throw Exception("Login failed");
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {
+          _emailError = "No user found for that email.";
+        });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          _passwordError = "Wrong password provided.";
+        });
+      } else {
+        setState(() {
+          _emailError = "An error occurred. Please try again.";
+        });
+      }
     } catch (e) {
-      // Handle error
+      setState(() {
+        _emailError = "An error occurred. Please try again.";
+      });
     } finally {
       setState(() {
         _isLoading = false;

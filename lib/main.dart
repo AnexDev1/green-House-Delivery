@@ -19,8 +19,10 @@ void main() async {
   bool seenOnboarding = await checkFirstTime();
   Chapa.configure(privateKey: "CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb");
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CartProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+      ],
       child: MyApp(seenOnboarding: seenOnboarding), // Your main app widget
     ),
   );

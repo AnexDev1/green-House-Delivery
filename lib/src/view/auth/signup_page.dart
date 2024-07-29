@@ -23,10 +23,13 @@ class _SignUpPageState extends State<RegisterPage> {
   String? _phoneNumberError;
   String? _emailError;
   String? _passwordError;
+  String? _confirmPasswordError;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   void _handleLoginOrSignup() async {
     setState(() {
@@ -69,6 +72,12 @@ class _SignUpPageState extends State<RegisterPage> {
         });
         throw Exception("Validation failed");
       }
+      if (_confirmPasswordController.text != _passwordController.text) {
+        setState(() {
+          _passwordError = "Password doesn't match";
+        });
+        throw Exception("Validation failed");
+      }
 
       // Perform login or signup operation
       User? user = await _authService.signUpWithEmailPassword(
@@ -103,6 +112,7 @@ class _SignUpPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _phoneNumberController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -236,6 +246,8 @@ class _SignUpPageState extends State<RegisterPage> {
         _entryField("Email", _emailController, errorText: _emailError),
         _entryField("Password", _passwordController,
             isPassword: true, errorText: _passwordError),
+        _entryField("confirm Password", _confirmPasswordController,
+            isPassword: true, errorText: _confirmPasswordError),
       ],
     );
   }
