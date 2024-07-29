@@ -2,29 +2,29 @@
   "products": {
     "product1": {
       "id": "1",
-      "name": "Pizza Margherita",
+      "name": "Normal Burger",
       "description": "Classic Margherita with fresh mozzarella and basil.",
-      "price": 5.99,
-      "category": "Pizza",
+      "price": 205.00,
+      "category": "Burger",
       "rating": 4.6,
       "imageUrl": "url_to_image",
-      "isPopular": true
+      "isPopular": false
     },
     "product10": {
       "id": "10",
-      "name": "Sparkling Water",
+      "name": "Egg Burger",
       "description": "Refreshing sparkling water with a hint of fruit flavor.",
-      "price": 2.49,
-      "category": "Drinks",
+      "price": 225.00,
+      "category": "Burger",
       "rating": 4.2,
       "imageUrl": "url_to_image",
       "isPopular": false
     },
     "product2": {
       "id": "2",
-      "name": "Cheeseburger",
+      "name": "Cheese Burger",
       "description": "Classic cheeseburger with beef patty, cheddar cheese, lettuce, tomato, onion, and pickles.",
-      "price": 8.49,
+      "price": 240.00,
       "category": "Burger",
       "rating": 4.2,
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
@@ -32,19 +32,19 @@
     },
     "product3": {
       "id": "3",
-      "name": "Hawaiian Pizza",
+      "name": "Special Cheese Burger",
       "description": "Pizza topped with ham and pineapple chunks.",
-      "price": 6.99,
-      "category": "Pizza",
+      "price": 260.00,
+      "category": "Burger",
       "rating": 4.1,
       "imageUrl": "url_to_image",
-      "isPopular": true
+      "isPopular": false
     },
     "product4": {
       "id": "4",
-      "name": "Veggie Burger",
+      "name": "Double Burger",
       "description": "Burger with a veggie patty, lettuce, tomato, onion, and avocado spread.",
-      "price": 7.99,
+      "price": 290.00,
       "category": "Burger",
       "rating": 4.5,
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
@@ -52,39 +52,39 @@
     },
     "product5": {
       "id": "5",
-      "name": "Iced Coffee",
+      "name": "Double Cheese Burger",
       "description": "Coffee brewed hot and chilled over ice.",
-      "price": 3.49,
-      "category": "Drinks",
+      "price": 320.00,
+      "category": "Burger",
       "rating": 4.1,
       "imageUrl": "url_to_image",
-      "isPopular": true
+      "isPopular": false
     },
     "product6": {
       "id": "6",
-      "name": "Chicken Caesar Salad",
+      "name": "Triple Burger",
       "description": "Salad with grilled chicken, romaine lettuce, croutons, parmesan cheese, and Caesar dressing.",
-      "price": 8.99,
+      "price": 430.00,
       "category": "Burger",
       "rating": 4.7,
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
-      "isPopular": false
+      "isPopular": true
     },
     "product7": {
       "id": "7",
-      "name": "Chocolate Milkshake",
+      "name": "Chicken Burger",
       "description": "Rich and creamy chocolate milkshake.",
-      "price": 4.49,
-      "category": "Drinks",
+      "price": 340.00,
+      "category": "Burger",
       "rating": 4.8,
       "imageUrl": "url_to_image",
       "isPopular": true
     },
     "product8": {
       "id": "8",
-      "name": "Spicy Chicken Burger",
+      "name": "GH Special Burger",
       "description": "Burger with a spicy chicken patty, lettuce, tomato, onion, and jalapeno mayo.",
-      "price": 8.99,
+      "price": 340.00,
       "category": "Burger",
       "rating": 4.6,
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/green-house-f3c1c.appspot.com/o/360_F_637983767_1gmkeiW4gOxeckQKojDv7q79I8ZEaVi7.jpg?alt=media&token=a8938cae-5f86-4ca4-abc8-7fea9d2da86b",
@@ -92,12 +92,372 @@
     },
     "product9": {
       "id": "9",
-      "name": "Pepperoni Pizza",
+      "name": "Beef Club Sandwich",
       "description": "Pizza topped with pepperoni slices.",
-      "price": 6.49,
-      "category": "Pizza",
+      "price": 300.00,
+      "category": "Sandwiches",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product11": {
+      "id": "11",
+      "name": "Chicken Club Sandwich",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 320.00,
+      "category": "Sandwiches",
       "rating": 4.8,
       "imageUrl": "url_to_image",
       "isPopular": true
+    },
+    "product12": {
+      "id": "12",
+      "name": "Egg Sandwich",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 160.00,
+      "category": "Sandwiches",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product13": {
+      "id": "13",
+      "name": "Beef Sandwich",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 200.00,
+      "category": "Sandwiches",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product14": {
+      "id": "14",
+      "name": "GH Shake Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product15": {
+      "id": "15",
+      "name": "Milk Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product16": {
+      "id": "16",
+      "name": "Chocolate Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product17": {
+      "id": "17",
+      "name": "Avocado Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product18": {
+      "id": "18",
+      "name": "Banana Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product19": {
+      "id": "19",
+      "name": "Strawberry Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product20": {
+      "id": "20",
+      "name": "Mango Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product21": {
+      "id": "21",
+      "name": "papaya Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product22": {
+      "id": "22",
+      "name": "Coffee Milk Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product23": {
+      "id": "23",
+      "name": "Sweet Shake",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product24": {
+      "id": "24",
+      "name": "Smoothie",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product25": {
+      "id": "25",
+      "name": "Mango Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 75.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product26": {
+      "id": "26",
+      "name": "Pineapple Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 75.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product27": {
+      "id": "27",
+      "name": "Water-melon Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 95.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product28": {
+      "id": "28",
+      "name": "Zeytun Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 65.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product29": {
+      "id": "29",
+      "name": "Avocado Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 65.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product30": {
+      "id": "30",
+      "name": "Papaya Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 65.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product31": {
+      "id": "31",
+      "name": "Carrot Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 65.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product32": {
+      "id": "32",
+      "name": "Banana Juice",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 65.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product33": {
+      "id": "33",
+      "name": "Fruit Punch",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 110.00,
+      "category": "Juice",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product34": {
+      "id": "34",
+      "name": "Bottled Soda",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 40.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product35": {
+      "id": "35",
+      "name": "Plastic Soda",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 55.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product36": {
+      "id": "36",
+      "name": "Plastic Ambo",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 50.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product37": {
+      "id": "37",
+      "name": "1/3L Water",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 20.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product38": {
+      "id": "38",
+      "name": "1/2L Water",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 25.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product39": {
+      "id": "39",
+      "name": "1L Water",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 30.00,
+      "category": "Drinks",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product40": {
+      "id": "40",
+      "name": "Melewa",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 130.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product41": {
+      "id": "41",
+      "name": "Special Melewa",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 130.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product42": {
+      "id": "42",
+      "name": "Fetira",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 180.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product43": {
+      "id": "43",
+      "name": "Special Fetira",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 180.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product44": {
+      "id": "44",
+      "name": "Omlete",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 150.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
+    },
+    "product45": {
+      "id": "45",
+      "name": "Special Omlete",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 210.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": true
+    },
+    "product46": {
+      "id": "46",
+      "name": "French Toast",
+      "description": "Pizza topped with pepperoni slices.",
+      "price": 150.00,
+      "category": "Breakfast",
+      "rating": 4.8,
+      "imageUrl": "url_to_image",
+      "isPopular": false
     }
   }}

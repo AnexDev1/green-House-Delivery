@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage>
         username = loadedUsername;
       });
     });
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
     _productsFuture = FirebaseDatabaseService().fetchProducts();
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
@@ -69,10 +69,14 @@ class _HomePageState extends State<HomePage>
     } else {
       switch (_tabController.index) {
         case 1:
-          return 'Pizza';
+          return 'Breakfast';
         case 2:
           return 'Burger';
         case 3:
+          return 'Sandwiches';
+        case 4:
+          return 'Juice';
+        case 5:
           return 'Drinks';
         default:
           return 'Popular';
@@ -91,7 +95,7 @@ class _HomePageState extends State<HomePage>
     final firstName = username.split(" ")[0];
     return SafeArea(
       child: DefaultTabController(
-        length: 4,
+        length: 6,
         child: Scaffold(
           appBar: AppBar(
             title: Padding(

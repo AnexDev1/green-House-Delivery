@@ -15,8 +15,10 @@ class CategoryTabBar extends StatelessWidget {
       isScrollable: true,
       tabs: const [
         Tab(text: 'Popular'),
-        Tab(text: 'Pizza'),
+        Tab(text: 'Breakfast'),
         Tab(text: 'Burger'),
+        Tab(text: 'Sandwiches'),
+        Tab(text: 'Juice'),
         Tab(text: 'Drinks'),
       ],
     );

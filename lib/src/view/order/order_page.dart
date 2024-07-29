@@ -54,7 +54,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
         title: const Text('Order History'),
       ),
       body: orders.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: Center(
+              child: Text('No Orders Found'),
+            ))
           : ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index) {
