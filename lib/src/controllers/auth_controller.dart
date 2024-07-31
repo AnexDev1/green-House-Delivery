@@ -58,6 +58,7 @@ class SignupLogic {
       // Perform signup operation
       User? user = await _authService.signUpWithEmailPassword(
           emailController.text, passwordController.text);
+
       if (user != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('username', usernameController.text);
@@ -66,7 +67,7 @@ class SignupLogic {
         // Send OTP to email
         await user.sendEmailVerification();
         // Navigate to OTP verification page
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => EmailVerificationPage(),

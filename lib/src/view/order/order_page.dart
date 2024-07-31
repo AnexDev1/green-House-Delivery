@@ -61,7 +61,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     DateFormat('dd MMM yyyy').format(orderDate);
 
                 return Card(
-                  color: order['orderStatus'] == 'Pending'
+                  color: order['orderStatus'] == 'pending'
                       ? Colors.amber
                       : Color(0xff3fb31e),
                   margin: const EdgeInsets.symmetric(
