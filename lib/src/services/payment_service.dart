@@ -27,6 +27,7 @@ class PaymentService {
       print(cartItems);
       var orderData = {
         'paymentData': paymentData,
+        'orderStatus': 'pending',
         'cartItems': cartItems
             .map((item) => {
                   'name': item.name,

@@ -1,7 +1,9 @@
+// lib/src/view/order/order_page.dart
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/view/order/order_detail_page.dart';
 import 'package:intl/intl.dart';
-
-import '../../controllers/order_controller.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -12,19 +14,30 @@ class OrderHistoryPage extends StatefulWidget {
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
   List<Map<String, dynamic>> orders = [];
+  late DatabaseReference ordersRef;
+  late String currentUserEmail;
 
   @override
   void initState() {
     super.initState();
-    fetchOrderHistory();
+    ordersRef = FirebaseDatabase.instance.ref().child('payments');
+    currentUserEmail = FirebaseAuth.instance.currentUser!.email!;
+    listenToOrderChanges();
   }
 
-  Future<void> fetchOrderHistory() async {
-    OrderHistoryService orderHistoryService = OrderHistoryService();
-    List<Map<String, dynamic>> fetchedOrders =
-        await orderHistoryService.fetchOrderHistory();
-    setState(() {
-      orders = fetchedOrders;
+  void listenToOrderChanges() {
+    ordersRef.onValue.listen((event) {
+      final data = event.snapshot.value as Map<dynamic, dynamic>;
+      final List<Map<String, dynamic>> fetchedOrders = [];
+      data.forEach((key, value) {
+        final order = Map<String, dynamic>.from(value);
+        if (order['userEmail'] == currentUserEmail) {
+          fetchedOrders.add(order);
+        }
+      });
+      setState(() {
+        orders = fetchedOrders;
+      });
     });
   }
 
@@ -48,7 +61,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     DateFormat('dd MMM yyyy').format(orderDate);
 
                 return Card(
-                  color: Color(0xff3fb31e),
+                  color: order['orderStatus'] == 'Pending'
+                      ? Colors.amber
+                      : Color(0xff3fb31e),
                   margin: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 10.0,
@@ -85,7 +100,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       ],
                     ),
                     onTap: () {
-                      // Navigate to order details page if needed
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetailPage(order: order),
+                        ),
+                      );
                     },
                   ),
                 );
