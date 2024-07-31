@@ -3,10 +3,13 @@ import 'package:greenhouse/src/models/product.dart';
 import 'package:greenhouse/src/services/firebase_database_service.dart';
 import 'package:greenhouse/src/view/home/view/carousel.dart';
 import 'package:greenhouse/src/view/home/view/category_tab.dart';
-import 'package:greenhouse/src/view/home/view/recommended_section.dart';
 import 'package:greenhouse/src/view/home/view/searchbar.dart';
+import 'package:greenhouse/src/view/home/view/user_avatar.dart';
 import 'package:greenhouse/src/widgets/product_list.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../utils/payment_utls.dart';
+import '../../utils/product_filter.dart';
+import '../product/product_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,16 +25,10 @@ class _HomePageState extends State<HomePage>
   List<Product> _filteredProducts = [];
   String username = 'Loading...';
 
-  Future<String> _loadUsername() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('username') ??
-        'User'; // Default to 'User' if not found
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadUsername().then((loadedUsername) {
+    loadUsername().then((loadedUsername) {
       setState(() {
         username = loadedUsername;
       });
@@ -49,39 +46,9 @@ class _HomePageState extends State<HomePage>
   void _updateFilteredProducts() async {
     final products = await _productsFuture;
     setState(() {
-      String selectedCategory = getCurrentCategory();
-      if (selectedCategory == 'Popular') {
-        _filteredProducts =
-            products.where((product) => product.isPopular).toList();
-      } else {
-        _filteredProducts = products
-            .where((product) =>
-                product.category.toLowerCase() ==
-                selectedCategory.toLowerCase())
-            .toList();
-      }
+      String selectedCategory = getCurrentCategory(_tabController.index);
+      _filteredProducts = filterProducts(products, selectedCategory);
     });
-  }
-
-  String getCurrentCategory() {
-    if (_tabController.index == 0) {
-      return 'Popular';
-    } else {
-      switch (_tabController.index) {
-        case 1:
-          return 'Breakfast';
-        case 2:
-          return 'Burger';
-        case 3:
-          return 'Sandwiches';
-        case 4:
-          return 'Juice';
-        case 5:
-          return 'Drinks';
-        default:
-          return 'Popular';
-      }
-    }
   }
 
   @override
@@ -107,22 +74,18 @@ class _HomePageState extends State<HomePage>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      // Use a FutureBuilder as shown in the ProfilePage example
                       Text(
-                        'Hello, $firstName', // Customize this text as needed
+                        'Hello, $firstName',
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-
                       const Text('Welcome back',
                           style: TextStyle(fontSize: 16)),
                     ],
                   ),
-                  const CircleAvatar(
-                    radius: 18.0,
-                    backgroundImage: NetworkImage(
-                        'https://randomuser.me/api/portraits/women/93.jpg'),
-                    backgroundColor: Colors.transparent,
+                  const UserAvatar(
+                    imageUrl:
+                        'https://randomuser.me/api/portraits/women/93.jpg',
                   ),
                 ],
               ),
@@ -134,34 +97,49 @@ class _HomePageState extends State<HomePage>
               children: [
                 const SearchBarWidget(),
                 const VerticalImageCarousel(),
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Category', style: TextStyle(fontSize: 20)),
+                      const Text('Recommended For You',
+                          style: TextStyle(fontSize: 20)),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductListPage(
+                                allProducts: _filteredProducts,
+                                category:
+                                    getCurrentCategory(_tabController.index),
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('See All',
+                            style: TextStyle(color: Colors.black)),
+                      ),
                     ],
                   ),
                 ),
                 CategoryTabBar(controller: _tabController),
-                FutureBuilder<List<Product>>(
-                  future: _productsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text('Loading..');
-                    } else if (snapshot.hasError) {
-                      return const Text('Error fetching products');
-                    } else {
-                      _filteredProducts = snapshot.data ?? [];
-                      return RecommendedSection(
-                        currentCategory: getCurrentCategory(),
-                        filteredProducts: _filteredProducts,
-                      );
-                    }
-                  },
+                SizedBox(
+                  height: 270,
+                  child: FutureBuilder<List<Product>>(
+                    future: _productsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text('Loading..');
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return ProductList(filteredProducts: _filteredProducts);
+                      }
+                    },
+                  ),
                 ),
-                ProductList(filteredProducts: _filteredProducts),
               ],
             ),
           ),

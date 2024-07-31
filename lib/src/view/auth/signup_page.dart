@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/main_screen.dart';
-import 'package:greenhouse/src/services/firebase_auth_service.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/auth/widget/bezierContainer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-FirebaseAuthService _authService = FirebaseAuthService();
+import '../../controllers/auth_controller.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key, this.title}) : super(key: key);
@@ -30,75 +26,41 @@ class _SignUpPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
-
-  void _handleLoginOrSignup() async {
+  final SignupLogic _signupLogic = SignupLogic();
+  void _setLoading(bool isLoading) {
     setState(() {
-      _isLoading = true;
-      _usernameError = null;
-      _phoneNumberError = null;
-      _emailError = null;
-      _passwordError = null;
+      _isLoading = isLoading;
     });
+  }
 
-    try {
-      // Validate input fields
-      if (_usernameController.text.isEmpty) {
-        setState(() {
-          _usernameError = "Username cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
-      if (_phoneNumberController.text.isEmpty) {
-        setState(() {
-          _phoneNumberError = "Phone number cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
-      if (_emailController.text.isEmpty) {
-        setState(() {
-          _emailError = "Email cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
-      if (!_emailController.text.contains('@')) {
-        setState(() {
-          _emailError = "Invalid email address";
-        });
-        throw Exception("Validation failed");
-      }
-      if (_passwordController.text.isEmpty) {
-        setState(() {
-          _passwordError = "Password cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
-      if (_confirmPasswordController.text != _passwordController.text) {
-        setState(() {
-          _passwordError = "Password doesn't match";
-        });
-        throw Exception("Validation failed");
-      }
+  void _setUsernameError(String? error) {
+    setState(() {
+      _usernameError = error;
+    });
+  }
 
-      // Perform login or signup operation
-      User? user = await _authService.signUpWithEmailPassword(
-          _emailController.text, _passwordController.text);
-      if (user != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('username', _usernameController.text);
-        await prefs.setString('phoneNum', _phoneNumberController.text);
-        // Navigate to home page or dashboard
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
-      } else {
-        throw Exception("Registration failed");
-      }
-    } catch (e) {
-      // Handle error
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _setPhoneNumberError(String? error) {
+    setState(() {
+      _phoneNumberError = error;
+    });
+  }
+
+  void _setEmailError(String? error) {
+    setState(() {
+      _emailError = error;
+    });
+  }
+
+  void _setPasswordError(String? error) {
+    setState(() {
+      _passwordError = error;
+    });
+  }
+
+  void _setConfirmPasswordError(String? error) {
+    setState(() {
+      _confirmPasswordError = error;
+    });
   }
 
   @override
@@ -149,7 +111,22 @@ class _SignUpPageState extends State<RegisterPage> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      onPressed: _isLoading ? null : _handleLoginOrSignup,
+      onPressed: _isLoading
+          ? null
+          : () => _signupLogic.handleSignup(
+                context,
+                _usernameController,
+                _phoneNumberController,
+                _emailController,
+                _passwordController,
+                _confirmPasswordController,
+                _setLoading,
+                _setUsernameError,
+                _setPhoneNumberError,
+                _setEmailError,
+                _setPasswordError,
+                _setConfirmPasswordError,
+              ),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),

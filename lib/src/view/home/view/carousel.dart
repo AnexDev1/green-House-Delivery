@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
-import '../../../models/promo_item.dart';
+import '../../../utils/constants.dart';
 
 class VerticalImageCarousel extends StatefulWidget {
   const VerticalImageCarousel({super.key});
@@ -12,17 +12,7 @@ class VerticalImageCarousel extends StatefulWidget {
 
 class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
   int _currentIndex = 0;
-  final List<PromoItem> promoList = [
-    PromoItem(
-        text: "You get 20% discount on every order", imageUrl: "assets/1.png"),
-    PromoItem(
-        text: "Savor the taste of Italy pizzas at 20% discount",
-        imageUrl: "assets/2.png"),
-    PromoItem(
-        text: "Enjoy 20% off! and Refresh with our ice coffee",
-        imageUrl: "assets/3.png"),
-    // Add more items here
-  ];
+
   final CarouselController _carouselController = CarouselController();
   @override
   Widget build(BuildContext context) {

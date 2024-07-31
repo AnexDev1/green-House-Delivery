@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/main_screen.dart';
-import 'package:greenhouse/src/services/firebase_auth_service.dart';
 import 'package:greenhouse/src/view/auth/signup_page.dart';
 import 'package:greenhouse/src/view/auth/widget/bezierContainer.dart';
 
-FirebaseAuthService _authService = FirebaseAuthService();
+import '../../controllers/auth_controller.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
@@ -23,67 +20,23 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _handleLoginOrSignup() async {
+  final LoginLogic _loginLogic = LoginLogic();
+  void _setLoading(bool isLoading) {
     setState(() {
-      _isLoading = true;
-      _emailError = null;
-      _passwordError = null;
+      _isLoading = isLoading;
     });
+  }
 
-    try {
-      // Validate input fields
-      if (_emailController.text.isEmpty) {
-        setState(() {
-          _emailError = "Email cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
-      if (!_emailController.text.contains('@')) {
-        setState(() {
-          _emailError = "Invalid email address";
-        });
-        throw Exception("Validation failed");
-      }
-      if (_passwordController.text.isEmpty) {
-        setState(() {
-          _passwordError = "Password cannot be empty";
-        });
-        throw Exception("Validation failed");
-      }
+  void _setEmailError(String? error) {
+    setState(() {
+      _emailError = error;
+    });
+  }
 
-      // Perform login operation
-      User? user = await _authService.signInWithEmailPassword(
-          _emailController.text, _passwordController.text);
-      if (user != null) {
-        // Navigate to home page or dashboard
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
-      } else {
-        throw Exception("Login failed");
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        setState(() {
-          _emailError = "No user found for that email.";
-        });
-      } else if (e.code == 'wrong-password') {
-        setState(() {
-          _passwordError = "Wrong password provided.";
-        });
-      } else {
-        setState(() {
-          _emailError = "An error occurred. Please try again.";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _emailError = "An error occurred. Please try again.";
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _setPasswordError(String? error) {
+    setState(() {
+      _passwordError = error;
+    });
   }
 
   Widget _entryField(String title, TextEditingController controller,
@@ -119,7 +72,16 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
       ),
-      onPressed: _isLoading ? null : _handleLoginOrSignup,
+      onPressed: _isLoading
+          ? null
+          : () => _loginLogic.handleLogin(
+                context,
+                _emailController,
+                _passwordController,
+                _setLoading,
+                _setEmailError,
+                _setPasswordError,
+              ),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),

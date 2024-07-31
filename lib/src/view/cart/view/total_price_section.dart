@@ -1,86 +1,17 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
-import 'package:http/http.dart' as http;
+import 'package:greenhouse/src/services/payment_service.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../utils/payment_utls.dart';
 import '../../order/payment_success.dart';
 
 String username = '';
 String phoneNumber = '';
 String? userEmail = '';
 String orderTime = '';
-
-class PaymentService {
-  Future<void> verifyPayment(BuildContext context, String transactionId,
-      List<CartItem> cartItems) async {
-    var headers = {
-      'Authorization': 'Bearer CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb'
-    };
-    var request = http.Request('GET',
-        Uri.parse('https://api.chapa.co/v1/transaction/verify/$transactionId'));
-    request.body = '''''';
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final jsonResponse = await response.stream.bytesToString();
-      var parsedResponse = json.decode(jsonResponse);
-      var paymentData = parsedResponse['data'];
-      print(cartItems);
-      var orderData = {
-        'paymentData': paymentData,
-        'cartItems': cartItems
-            .map((item) => {
-                  'name': item.name,
-                  'price': item.price,
-                  'quantity': item.quantity,
-                })
-            .toList(),
-        'userEmail': userEmail,
-        'orderTime': orderTime,
-      };
-      DatabaseReference ref = FirebaseDatabase.instance.ref('payments');
-      await ref.push().set(orderData).then((_) {
-        print('Document added');
-      }).catchError((error) {
-        print('Error adding document: $error');
-      });
-
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
-    }
-  }
-}
-
-String generateTxRef(String prefix) {
-  final timestamp = DateTime.now().millisecondsSinceEpoch;
-  final randomSuffix = Random()
-      .nextInt(9999)
-      .toString()
-      .padLeft(4, '0'); // Ensures a 4-digit random number
-  return '$prefix-$timestamp-$randomSuffix';
-}
-
-Future<String> _loadUsername() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('username') ??
-      'User'; // Default to 'User' if not found
-}
-
-Future<String> _loadPhoneNumber() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('phoneNum') ??
-      '09 ** ** ** **'; // Default to 'number' if not found
-}
 
 class TotalPriceSection extends StatefulWidget {
   const TotalPriceSection(
@@ -104,11 +35,11 @@ class TotalPriceSection extends StatefulWidget {
 class _TotalPriceSectionState extends State<TotalPriceSection> {
   @override
   void initState() {
-    _loadUsername().then((loadedUsername) {
+    loadUsername().then((loadedUsername) {
       setState(() {
         username = loadedUsername;
       });
-      _loadPhoneNumber().then((loadedPhoneNumber) {
+      loadPhoneNumber().then((loadedPhoneNumber) {
         setState(() {
           phoneNumber = loadedPhoneNumber;
         });
@@ -163,22 +94,17 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
             minimumSize: const Size.fromHeight(50), // Set the button height
           ),
           onPressed: () async {
-            // Assuming totalPrice is calculated elsewhere in your code.
-            final double totalAmount = widget
-                .totalAmount; // Use your totalPrice calculation logic here
-            String txRef = generateTxRef(
-                'gh'); // Implement your transaction reference generator
+            final double totalAmount = widget.totalAmount;
+            String txRef = generateTxRef('gh');
 
             await Chapa.getInstance.startPayment(
               firstName: username,
-              // lastName: userLastName,
               phoneNumber: phoneNumber,
               context: context,
               amount: totalAmount.toString(),
               currency: 'ETB',
               txRef: txRef,
               onInAppPaymentSuccess: (successMsg) async {
-                // Handle successful payment here
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                     builder: (context) => ThankYouPage(
@@ -187,13 +113,11 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
                 );
                 print("Payment Success: $successMsg");
 
-                // Verify payment
                 PaymentService paymentService = PaymentService();
                 await paymentService.verifyPayment(
                     context, txRef, widget.cartItems);
               },
               onInAppPaymentError: (errorMsg) {
-                // Handle payment error here
                 print("Payment Error: $errorMsg");
               },
             );

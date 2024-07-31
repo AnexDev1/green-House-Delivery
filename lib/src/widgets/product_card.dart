@@ -23,7 +23,7 @@ class ProductCard extends StatelessWidget {
               tag:
                   'product-hero-${product.id}', // Ensure this tag is unique for each product
               child: Image.network(product.imageUrl,
-                  height: 80, width: 170, fit: BoxFit.cover),
+                  height: 120, width: 170, fit: BoxFit.cover),
             ),
           ),
           Padding(
