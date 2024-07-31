@@ -7,6 +7,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupLogic {
   final FirebaseAuthService _authService = FirebaseAuthService();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<bool> isEmailVerified() async {
+    User? user = _auth.currentUser;
+    await user?.reload();
+    user = _auth.currentUser;
+    return user?.emailVerified ?? false;
+  }
 
   Future<void> handleSignup(
       BuildContext context,
@@ -67,7 +75,7 @@ class SignupLogic {
         // Send OTP to email
         await user.sendEmailVerification();
         // Navigate to OTP verification page
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => EmailVerificationPage(),

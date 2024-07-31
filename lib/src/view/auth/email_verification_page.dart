@@ -67,6 +67,19 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 20),
+            TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.green[500],
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (ctx) => MainScreen(),
+                    ),
+                  );
+                },
+                child: Text('Continue without Verification'))
           ],
         ),
       ),

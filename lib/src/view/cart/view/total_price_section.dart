@@ -1,6 +1,7 @@
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/controllers/auth_controller.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
 import 'package:greenhouse/src/services/payment_service.dart';
 import 'package:intl/intl.dart';
@@ -94,33 +95,38 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
             minimumSize: const Size.fromHeight(50), // Set the button height
           ),
           onPressed: () async {
+            final SignupLogic _authController = SignupLogic();
+            bool isVerified = await _authController.isEmailVerified();
             final double totalAmount = widget.totalAmount;
             String txRef = generateTxRef('gh');
+            isVerified
+                ? await Chapa.getInstance.startPayment(
+                    firstName: username,
+                    phoneNumber: phoneNumber,
+                    context: context,
+                    amount: totalAmount.toString(),
+                    currency: 'ETB',
+                    txRef: txRef,
+                    onInAppPaymentSuccess: (successMsg) async {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => ThankYouPage(
+                              txRef: txRef, amount: totalAmount.toString()),
+                        ),
+                      );
+                      print("Payment Success: $successMsg");
 
-            await Chapa.getInstance.startPayment(
-              firstName: username,
-              phoneNumber: phoneNumber,
-              context: context,
-              amount: totalAmount.toString(),
-              currency: 'ETB',
-              txRef: txRef,
-              onInAppPaymentSuccess: (successMsg) async {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => ThankYouPage(
-                        txRef: txRef, amount: totalAmount.toString()),
-                  ),
-                );
-                print("Payment Success: $successMsg");
-
-                PaymentService paymentService = PaymentService();
-                await paymentService.verifyPayment(
-                    context, txRef, widget.cartItems);
-              },
-              onInAppPaymentError: (errorMsg) {
-                print("Payment Error: $errorMsg");
-              },
-            );
+                      PaymentService paymentService = PaymentService();
+                      await paymentService.verifyPayment(
+                          context, txRef, widget.cartItems);
+                    },
+                    onInAppPaymentError: (errorMsg) {
+                      print("Payment Error: $errorMsg");
+                    },
+                  )
+                : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Please verify your email before proceeding'),
+                  ));
           },
           child: const Text('Proceed to pay',
               style: TextStyle(color: Colors.white, fontSize: 18)),
