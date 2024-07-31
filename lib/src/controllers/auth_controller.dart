@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
 import 'package:greenhouse/src/services/firebase_auth_service.dart';
+import 'package:greenhouse/src/view/auth/email_verification_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupLogic {
@@ -61,14 +62,20 @@ class SignupLogic {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('username', usernameController.text);
         await prefs.setString('phoneNum', phoneNumberController.text);
-        // Navigate to home page or dashboard
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
+
+        // Send OTP to email
+        await user.sendEmailVerification();
+        // Navigate to OTP verification page
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailVerificationPage(),
+          ),
+        );
       } else {
         throw Exception("Registration failed");
       }
     } catch (e) {
-      // Handle error
       setEmailError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -110,8 +117,12 @@ class LoginLogic {
           emailController.text, passwordController.text);
       if (user != null) {
         // Navigate to home page or dashboard
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+          ),
+        );
       } else {
         throw Exception("Login failed");
       }
@@ -125,6 +136,7 @@ class LoginLogic {
       }
     } catch (e) {
       setEmailError("An error occurred. Please try again.");
+      return null;
     } finally {
       setLoading(false);
     }

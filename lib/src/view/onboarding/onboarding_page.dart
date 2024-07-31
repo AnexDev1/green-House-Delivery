@@ -41,7 +41,8 @@ class OnboardingPage extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      trailingFunction: () {
+      trailingFunction: () async {
+        await setSeenOnboarding();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

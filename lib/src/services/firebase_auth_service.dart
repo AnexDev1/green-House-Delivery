@@ -17,6 +17,11 @@ class FirebaseAuthService {
     }
   }
 
+  Future<bool> isEmailVerified(User user) async {
+    await user.reload();
+    return user.emailVerified;
+  }
+
   Future<User?> signInWithEmailPassword(String email, String password) async {
     try {
       final UserCredential userCredential =

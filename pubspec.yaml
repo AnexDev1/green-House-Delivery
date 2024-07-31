@@ -49,6 +49,7 @@ dependencies:
   flutter_svg: ^2.0.9
   intl: ^0.19.0
   google_sign_in: ^6.2.1
+  mailer: ^6.1.2
 
 
 dev_dependencies:
@@ -84,6 +85,7 @@ flutter:
     - assets/2.png
     - assets/3.png
     - assets/card.png
+    - assets/check_email.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
