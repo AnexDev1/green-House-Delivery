@@ -124,9 +124,24 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
                       print("Payment Error: $errorMsg");
                     },
                   )
-                : ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Please verify your email before proceeding'),
-                  ));
+                : showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Email Verification Required'),
+                        content: Text(
+                            'Please verify your email before proceeding with the payment.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
           },
           child: const Text('Proceed to pay',
               style: TextStyle(color: Colors.white, fontSize: 18)),

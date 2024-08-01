@@ -23,7 +23,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   }
 
   void _startEmailVerificationCheck() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) async {
       await _checkEmailVerified();
     });
   }
@@ -53,9 +53,6 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Email Verification'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -70,7 +67,8 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
             SizedBox(height: 20),
             TextButton(
                 style: TextButton.styleFrom(
-                  foregroundColor: Colors.green[500],
+                  backgroundColor: Color(0xff3fb31e),
+                  foregroundColor: Colors.white,
                 ),
                 onPressed: () {
                   Navigator.of(context).pushReplacement(

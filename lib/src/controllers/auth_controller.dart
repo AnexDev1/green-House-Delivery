@@ -75,7 +75,7 @@ class SignupLogic {
         // Send OTP to email
         await user.sendEmailVerification();
         // Navigate to OTP verification page
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => EmailVerificationPage(),
