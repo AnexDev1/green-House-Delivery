@@ -1,53 +1,53 @@
-import 'dart:convert';
-
+import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
-import 'package:http/http.dart' as http;
-
-import '../view/cart/view/total_price_section.dart';
 
 class PaymentService {
-  Future<void> verifyPayment(BuildContext context, String transactionId,
-      List<CartItem> cartItems) async {
-    var headers = {
-      'Authorization': 'Bearer CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb'
-    };
-    var request = http.Request('GET',
-        Uri.parse('https://api.chapa.co/v1/transaction/verify/$transactionId'));
-    request.body = '''''';
-    request.headers.addAll(headers);
+  Future<void> verifyPayment(BuildContext context, String txRef,
+      List<CartItem> cartItems, String userEmail, String orderTime) async {
+    try {
+      Map<String, dynamic> verificationResult =
+          await Chapa.getInstance.verifyPayment(
+        txRef: txRef,
+      );
 
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      final jsonResponse = await response.stream.bytesToString();
-      var parsedResponse = json.decode(jsonResponse);
-      var paymentData = parsedResponse['data'];
-      print(cartItems);
-      var orderData = {
-        'paymentData': paymentData,
-        'orderStatus': 'pending',
-        'cartItems': cartItems
-            .map((item) => {
-                  'name': item.name,
-                  'price': item.price,
-                  'quantity': item.quantity,
-                })
-            .toList(),
-        'userEmail': userEmail,
-        'orderTime': orderTime,
-      };
-      DatabaseReference ref = FirebaseDatabase.instance.ref('payments');
-      await ref.push().set(orderData).then((_) {
-        print('Document added');
-      }).catchError((error) {
-        print('Error adding document: $error');
-      });
-
-      print(await response.stream.bytesToString());
-    } else {
-      print(response.reasonPhrase);
+      if (verificationResult['status'] == 'success') {
+        var paymentData = verificationResult['data'];
+        var orderData = {
+          'paymentData': paymentData,
+          'orderStatus': 'pending',
+          'cartItems': cartItems
+              .map((item) => {
+                    'name': item.name,
+                    'price': item.price,
+                    'quantity': item.quantity,
+                  })
+              .toList(),
+          'userEmail': userEmail,
+          'orderTime': orderTime,
+        };
+        DatabaseReference ref = FirebaseDatabase.instance.ref('payments');
+        await ref.push().set(orderData).then((_) {
+          print('Document added');
+        }).catchError((error) {
+          print('Error adding document: $error');
+        });
+      } else {
+        print('Payment verification failed: ${verificationResult['message']}');
+      }
+    } on ChapaException catch (e) {
+      if (e is AuthException) {
+        print('Authentication error: ${e.toString()}');
+      } else if (e is NetworkException) {
+        print('Network error: ${e.toString()}');
+      } else if (e is ServerException) {
+        print('Server error: ${e.toString()}');
+      } else if (e is VerificationException) {
+        print('Verification error: ${e.toString()}');
+      } else {
+        print('Unknown error: ${e.toString()}');
+      }
     }
   }
 }

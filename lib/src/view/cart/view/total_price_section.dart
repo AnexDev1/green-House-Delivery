@@ -117,8 +117,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
                       print("Payment Success: $successMsg");
 
                       PaymentService paymentService = PaymentService();
-                      await paymentService.verifyPayment(
-                          context, txRef, widget.cartItems);
+                      await paymentService.verifyPayment(context, txRef,
+                          widget.cartItems, userEmail!, orderTime);
                     },
                     onInAppPaymentError: (errorMsg) {
                       print("Payment Error: $errorMsg");
