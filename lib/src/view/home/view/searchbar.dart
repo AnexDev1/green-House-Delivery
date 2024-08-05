@@ -11,12 +11,12 @@ class SearchBarWidget extends StatelessWidget {
         decoration: InputDecoration(
           hintText: 'Search...',
           prefixIcon: const Icon(Icons.search),
-          suffixIcon: IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: () {
-              // Implement filter logic
-            },
-          ),
+          // suffixIcon: IconButton(
+          //   icon: const Icon(Icons.filter_list),
+          //   onPressed: () {
+          //     // Implement filter logic
+          //   },
+          // ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),

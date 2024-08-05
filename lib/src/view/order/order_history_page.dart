@@ -90,7 +90,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         ),
                         const SizedBox(height: 8.0),
                         Text(
-                          'Name: ${order['paymentData']['firstName']}',
+                          'Name: ${order['paymentData']['first_name']}',
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
