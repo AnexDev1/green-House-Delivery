@@ -106,10 +106,12 @@ class _SignUpPageState extends State<RegisterPage> {
   }
 
   Widget _submitButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
+    return TextButton(
+      style: TextButton.styleFrom(
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
+        minimumSize: const Size(double.infinity, 50),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
       onPressed: _isLoading
           ? null

@@ -2,6 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  Future<bool> isEmailVerified(User user) async {
+    await user.reload();
+    return user.emailVerified;
+  }
 
   Future<User?> signUpWithEmailPassword(String email, String password) async {
     try {
@@ -15,11 +19,6 @@ class FirebaseAuthService {
       print("Error signing up: $e");
       return null;
     }
-  }
-
-  Future<bool> isEmailVerified(User user) async {
-    await user.reload();
-    return user.emailVerified;
   }
 
   Future<User?> signInWithEmailPassword(String email, String password) async {

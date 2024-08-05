@@ -1,4 +1,4 @@
-// lib/src/view/order/order_page.dart
+// lib/src/view/order/order_history_page.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -90,11 +90,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         ),
                         const SizedBox(height: 8.0),
                         Text(
-                          'TxRef: ${order['paymentData']['reference']}',
+                          'Name: ${order['paymentData']['firstName']}',
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
                           'Amount: ${order['paymentData']['amount']} birr',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                          'Status: ${order['orderStatus']}',
                           style: TextStyle(color: Colors.white),
                         ),
                       ],

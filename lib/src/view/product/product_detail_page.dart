@@ -14,7 +14,7 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int quantity = 1;
-
+  bool isFav = false;
   void incrementQuantity() {
     setState(() {
       quantity++;
@@ -26,6 +26,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       if (quantity > 1) {
         quantity--;
       }
+    });
+  }
+
+  void toggleFavorite() {
+    setState(() {
+      isFav = !isFav;
     });
   }
 
@@ -57,11 +63,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             actions: <Widget>[
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.favorite_border,
-                    color: Colors.white,
-                  ))
+                  onPressed: () => toggleFavorite(),
+                  icon: isFav
+                      ? Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          color: Colors.white,
+                        )),
             ],
           ),
           SliverToBoxAdapter(
@@ -150,7 +161,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
                     'sed do eiusmod tempor incididunt ut labore et dolore'
                     ' magna aliqua.',
@@ -159,10 +170,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const SizedBox(
                     height: 30,
                   ), // This will push the button to the bottom
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
+                  TextButton(
+                    style: TextButton.styleFrom(
                       backgroundColor: Color(0xff3fb31e),
                       minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     onPressed: () => {
                       CartUtils.addToCart(context, widget.product, quantity),
@@ -174,7 +188,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       'Add to Cart',
                       style: TextStyle(color: Colors.white),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

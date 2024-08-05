@@ -1,4 +1,3 @@
-import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/controllers/auth_controller.dart';
@@ -7,7 +6,6 @@ import 'package:greenhouse/src/services/payment_service.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/payment_utls.dart';
-import '../../order/payment_success.dart';
 
 String username = '';
 String phoneNumber = '';
@@ -54,6 +52,8 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
 
   @override
   Widget build(BuildContext context) {
+    PaymentService paymentService = PaymentService();
+
     return Column(
       children: [
         Row(
@@ -100,30 +100,15 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
             final double totalAmount = widget.totalAmount;
             String txRef = generateTxRef('gh');
             isVerified
-                ? await Chapa.getInstance.startPayment(
-                    firstName: username,
-                    phoneNumber: phoneNumber,
-                    context: context,
-                    amount: totalAmount.toString(),
-                    currency: 'ETB',
-                    txRef: txRef,
-                    onInAppPaymentSuccess: (successMsg) async {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => ThankYouPage(
-                              txRef: txRef, amount: totalAmount.toString()),
-                        ),
-                      );
-                      print("Payment Success: $successMsg");
-
-                      PaymentService paymentService = PaymentService();
-                      await paymentService.verifyPayment(context, txRef,
-                          widget.cartItems, userEmail!, orderTime);
-                    },
-                    onInAppPaymentError: (errorMsg) {
-                      print("Payment Error: $errorMsg");
-                    },
-                  )
+                ? await paymentService.startPayment(
+                    context,
+                    txRef,
+                    username,
+                    phoneNumber,
+                    totalAmount,
+                    widget.cartItems,
+                    userEmail!,
+                    orderTime)
                 : showDialog(
                     context: context,
                     builder: (BuildContext context) {

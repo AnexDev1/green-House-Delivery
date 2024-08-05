@@ -20,4 +20,12 @@ class FirebaseDatabaseService {
       return [];
     }
   }
+
+  Future<void> addOrderData(Map<String, dynamic> orderData) async {
+    await _dbRef.child('payments').push().set(orderData).then((_) {
+      print('Document added');
+    }).catchError((error) {
+      print('Error adding document: $error');
+    });
+  }
 }

@@ -1,14 +1,9 @@
-import 'dart:math';
-
+import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-String generateTxRef(String prefix) {
-  final timestamp = DateTime.now().millisecondsSinceEpoch;
-  final randomSuffix = Random()
-      .nextInt(9999)
-      .toString()
-      .padLeft(4, '0'); // Ensures a 4-digit random number
-  return '$prefix-$timestamp-$randomSuffix';
+String generateTxRef(String? prefix) {
+  // Generate a random transaction reference with a custom prefix
+  return TxRefRandomGenerator.generate(prefix: prefix);
 }
 
 Future<String> loadUsername() async {

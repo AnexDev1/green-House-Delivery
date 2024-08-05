@@ -7,20 +7,18 @@ import 'package:provider/provider.dart';
 
 import 'home_button.dart';
 
-class ThankYouPage extends StatefulWidget {
-  const ThankYouPage({Key? key, required this.txRef, required this.amount})
-      : super(key: key);
+class PaymentSuccess extends StatefulWidget {
+  const PaymentSuccess({Key? key, required this.txRef}) : super(key: key);
 
   final String txRef;
-  final String amount;
 
   @override
-  State<ThankYouPage> createState() => _ThankYouPageState();
+  State<PaymentSuccess> createState() => _PaymentSuccessState();
 }
 
 Color themeColor = const Color(0xff267310);
 
-class _ThankYouPageState extends State<ThankYouPage> {
+class _PaymentSuccessState extends State<PaymentSuccess> {
   double screenWidth = 600;
   double screenHeight = 400;
   Color textColor = const Color(0xFF32567A);
@@ -59,7 +57,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
             ),
             SizedBox(height: screenHeight * 0.01),
             Text(
-              "${widget.amount} Birr Payment done Successfully",
+              " Payment done Successfully",
               style: TextStyle(
                 color: Colors.black87,
                 fontWeight: FontWeight.w400,
@@ -79,7 +77,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
             SizedBox(height: screenHeight * 0.06),
             Flexible(
               child: HomeButton(
-                title: 'Orders',
+                title: 'home',
                 onTap: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(

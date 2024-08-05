@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   const UserAvatar(
                     imageUrl:
-                        'https://randomuser.me/api/portraits/women/93.jpg',
+                        'https://randomuser.me/api/portraits/women/91.jpg',
                   ),
                 ],
               ),
@@ -131,7 +131,9 @@ class _HomePageState extends State<HomePage>
                     future: _productsFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text('Loading..');
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
