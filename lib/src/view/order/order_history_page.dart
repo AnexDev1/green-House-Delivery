@@ -2,8 +2,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/view/order/order_detail_page.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -104,11 +104,20 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                       ],
                     ),
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetailPage(order: order),
-                        ),
-                      );
+                      final Uri _url = Uri.parse(
+                          'https://checkout.chapa.co/checkout/test-payment-receipt/${order['paymentData']['reference']}');
+                      Future<void> _launchUrl() async {
+                        if (!await launchUrl(
+                          _url,
+                          mode: LaunchMode.inAppWebView,
+                          browserConfiguration:
+                              const BrowserConfiguration(showTitle: true),
+                        )) {
+                          throw Exception('Couldnt launch $_url');
+                        }
+                      }
+
+                      _launchUrl();
                     },
                   ),
                 );
