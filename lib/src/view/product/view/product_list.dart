@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/main.dart'; // Import the MyApp class
 import 'package:greenhouse/src/models/product.dart';
 import 'package:greenhouse/src/view/product/product_detail_page.dart';
-import 'package:greenhouse/src/widgets/product_card.dart';
+import 'package:greenhouse/src/view/product/view/product_card.dart';
 
 class ProductList extends StatelessWidget {
   const ProductList({
@@ -16,8 +17,7 @@ class ProductList extends StatelessWidget {
     return filteredProducts.isNotEmpty
         ? ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: filteredProducts
-                .length, // Assume productList is a list of Product objects
+            itemCount: filteredProducts.length,
             itemBuilder: (context, index) {
               final product = filteredProducts[index];
               return Container(
@@ -33,6 +33,7 @@ class ProductList extends StatelessWidget {
                     },
                     child: ProductCard(
                       product: product,
+                      themeMode: MyApp.of(context).themeMode,
                     )),
               );
             },

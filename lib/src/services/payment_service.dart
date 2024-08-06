@@ -1,5 +1,6 @@
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/main.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
 import 'package:greenhouse/src/services/firebase_database_service.dart';
 
@@ -78,6 +79,7 @@ class PaymentService {
           MaterialPageRoute(
             builder: (context) => PaymentSuccess(
               txRef: txRef,
+              themeMode: MyApp.of(context).themeMode,
             ),
           ),
         );

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
 import 'package:greenhouse/src/providers/cartProvider.dart';
@@ -8,9 +6,11 @@ import 'package:provider/provider.dart';
 import 'home_button.dart';
 
 class PaymentSuccess extends StatefulWidget {
-  const PaymentSuccess({Key? key, required this.txRef}) : super(key: key);
+  const PaymentSuccess({Key? key, required this.txRef, required this.themeMode})
+      : super(key: key);
 
   final String txRef;
+  final ThemeMode themeMode;
 
   @override
   State<PaymentSuccess> createState() => _PaymentSuccessState();
@@ -21,12 +21,15 @@ Color themeColor = const Color(0xff267310);
 class _PaymentSuccessState extends State<PaymentSuccess> {
   double screenWidth = 600;
   double screenHeight = 400;
-  Color textColor = const Color(0xFF32567A);
 
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
+
+    bool isDarkMode = widget.themeMode == ThemeMode.dark;
+    Color textColor = isDarkMode ? Colors.white : const Color(0xFF32567A);
+    Color subTextColor = isDarkMode ? Colors.white70 : Colors.black54;
 
     return Scaffold(
       body: Center(
@@ -59,7 +62,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
             Text(
               " Payment done Successfully",
               style: TextStyle(
-                color: Colors.black87,
+                color: textColor,
                 fontWeight: FontWeight.w400,
                 fontSize: 17,
               ),
@@ -69,7 +72,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               "You will be redirected to the home page shortly\nor click here to return to home page",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.black54,
+                color: subTextColor,
                 fontWeight: FontWeight.w400,
                 fontSize: 14,
               ),

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
+import 'package:greenhouse/src/view/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -66,6 +67,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: 'Preferences',
                   icon: Icons.settings,
                   onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SettingsPage(),
+                      ),
+                    );
                     // Handle preferences
                   },
                 ),

@@ -5,7 +5,7 @@ import 'package:greenhouse/src/view/home/view/carousel.dart';
 import 'package:greenhouse/src/view/home/view/category_tab.dart';
 import 'package:greenhouse/src/view/home/view/searchbar.dart';
 import 'package:greenhouse/src/view/home/view/user_avatar.dart';
-import 'package:greenhouse/src/widgets/product_list.dart';
+import 'package:greenhouse/src/view/product/view/product_list.dart';
 
 import '../../utils/payment_utls.dart';
 import '../../utils/product_filter.dart';

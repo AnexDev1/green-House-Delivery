@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/main.dart';
 import 'package:greenhouse/src/view/product/product_detail_page.dart';
 
 import '../../models/product.dart';
-import '../../widgets/product_card.dart';
+import 'view/product_card.dart';
 
 class ProductListPage extends StatelessWidget {
   final String category;
@@ -51,7 +52,10 @@ class ProductListPage extends StatelessWidget {
                 ),
               );
             },
-            child: ProductCard(product: product),
+            child: ProductCard(
+              product: product,
+              themeMode: MyApp.of(context).themeMode,
+            ),
           );
         },
       ),

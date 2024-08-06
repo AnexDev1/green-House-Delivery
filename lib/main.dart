@@ -17,13 +17,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   bool seenOnboarding = await checkFirstTime();
+  bool isDarkMode = await getDarkModePreference();
   Chapa.configure(privateKey: "CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb");
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
-      child: MyApp(seenOnboarding: seenOnboarding), // Your main app widget
+      child: MyApp(
+          seenOnboarding: seenOnboarding,
+          isDarkMode: isDarkMode), // Your main app widget
     ),
   );
 }
@@ -38,14 +41,50 @@ Future<void> setSeenOnboarding() async {
   await prefs.setBool('seenOnboarding', true);
 }
 
-class MyApp extends StatelessWidget {
+Future<bool> getDarkModePreference() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('isDarkMode') ?? false;
+}
+
+class MyApp extends StatefulWidget {
   final bool seenOnboarding;
-  const MyApp({super.key, required this.seenOnboarding});
+  final bool isDarkMode;
+  const MyApp(
+      {super.key, required this.seenOnboarding, required this.isDarkMode});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
+}
+
+class _MyAppState extends State<MyApp> {
+  late ThemeMode _themeMode;
+
+  _MyAppState() : _themeMode = ThemeMode.light;
+
+  @override
+  void initState() {
+    _themeMode = widget.isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    super.initState();
+  }
+
+  void setTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+    });
+  }
+
+  ThemeMode get themeMode => _themeMode;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: seenOnboarding
+      themeMode: _themeMode,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: widget.seenOnboarding
           ? (FirebaseAuth.instance.currentUser == null
               ? LoginPage()
               : const MainScreen())
