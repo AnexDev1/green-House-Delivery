@@ -2,7 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/settings/settings_page.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../providers/cartProvider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -101,9 +104,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   trailing: Icon(Icons.keyboard_arrow_right),
                   onTap: () async {
                     await FirebaseAuth.instance.signOut();
+                    Provider.of<CartProvider>(context, listen: false)
+                        .clearCart();
+
                     // Navigate to login page
                     Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
                     );
                   },
                 ),
