@@ -8,6 +8,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../view/order/payment_success.dart';
 
+enum OrderStatus {
+  pending,
+  delivered,
+}
+
 class PaymentService {
   FirebaseDatabaseService _firebaseDatabaseService = FirebaseDatabaseService();
 
@@ -69,11 +74,11 @@ class PaymentService {
         var paymentData = verificationResult['data'];
         var orderData = {
           'location': {
-            'latitude': currentPosition.latitude ?? 0.0,
-            'longitude': currentPosition.longitude ?? 0.65,
+            'latitude': currentPosition.latitude,
+            'longitude': currentPosition.longitude,
           },
           'paymentData': paymentData,
-          'orderStatus': 'pending',
+          'orderStatus': OrderStatus.pending.toString().split('.').last,
           'cartItems': cartItems
               .map((item) => {
                     'name': item.name,

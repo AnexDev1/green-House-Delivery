@@ -141,6 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
 Widget _profileRow({required String username, required String userEmail}) {
   return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: [
       const CircleAvatar(
@@ -149,6 +150,7 @@ Widget _profileRow({required String username, required String userEmail}) {
             NetworkImage('https://randomuser.me/api/portraits/men/33.jpg'),
       ),
       Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             username,
@@ -165,12 +167,6 @@ Widget _profileRow({required String username, required String userEmail}) {
             ),
           ),
         ],
-      ),
-      IconButton(
-        onPressed: () {},
-        icon: Icon(
-          Icons.keyboard_arrow_right,
-        ),
       ),
     ],
   );
