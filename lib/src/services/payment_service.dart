@@ -1,8 +1,10 @@
 import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:greenhouse/main.dart';
 import 'package:greenhouse/src/models/cart_item.dart';
 import 'package:greenhouse/src/services/firebase_database_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../view/order/payment_success.dart';
 
@@ -28,14 +30,48 @@ class PaymentService {
     }
   }
 
-  Future<void> verifyPaymentAndAddOrder(BuildContext context, String txRef,
-      List<CartItem> cartItems, String userEmail, String orderTime) async {
+  Future<void> requestLocationPermission() async {
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      // Permission granted
+    } else if (status.isDenied) {
+      // Permission denied
+    } else if (status.isPermanentlyDenied) {
+      // Open app settings
+      openAppSettings();
+    }
+  }
+
+  Future<void> checkLocationServices() async {
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      // Location services are disabled
+      await Geolocator.openLocationSettings();
+    }
+  }
+
+  Future<Position> getCurrentLocation() async {
+    await checkLocationServices();
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  Future<void> verifyPaymentAndAddOrder(
+      BuildContext context,
+      String txRef,
+      List<CartItem> cartItems,
+      String userEmail,
+      String orderTime,
+      Position currentPosition) async {
     try {
       Map<String, dynamic> verificationResult = await verifyPayment(txRef);
 
       if (verificationResult['status'] == 'success') {
         var paymentData = verificationResult['data'];
         var orderData = {
+          'location': {
+            'latitude': currentPosition.latitude ?? 0.0,
+            'longitude': currentPosition.longitude ?? 0.65,
+          },
           'paymentData': paymentData,
           'orderStatus': 'pending',
           'cartItems': cartItems
@@ -48,6 +84,7 @@ class PaymentService {
           'userEmail': userEmail,
           'orderTime': orderTime,
         };
+        print('Order Data : $orderData');
         await _firebaseDatabaseService.addOrderData(orderData);
       } else {
         print('Payment verification failed: ${verificationResult['message']}');
@@ -66,7 +103,8 @@ class PaymentService {
       double totalAmount,
       List<CartItem> cartItems,
       String userEmail,
-      String orderTime) async {
+      String orderTime,
+      Position currentPosition) async {
     await Chapa.getInstance.startPayment(
       firstName: username,
       phoneNumber: phoneNumber,
@@ -86,7 +124,7 @@ class PaymentService {
         print("Payment Success: $successMsg");
 
         await verifyPaymentAndAddOrder(
-            context, txRef, cartItems, userEmail, orderTime);
+            context, txRef, cartItems, userEmail, orderTime, currentPosition);
       },
       onInAppPaymentError: (errorMsg) {
         print("Payment Error: $errorMsg");
