@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:order_tracker/order_tracker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderHistoryPage extends StatefulWidget {
@@ -62,9 +63,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     DateFormat('dd MMM yyyy').format(orderDate);
 
                 return Card(
-                  color: order['orderStatus'] == 'pending'
-                      ? Colors.amber
-                      : Color(0xff3fb31e),
+                  color: Colors.grey[500],
+                  //     ? Colors.amber
+                  //     : Color(0xff3fb31e),
                   margin: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 10.0,
@@ -79,7 +80,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                             Text(
                               formattedDate,
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             ),
                             Icon(
@@ -90,17 +91,9 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           ],
                         ),
                         const SizedBox(height: 8.0),
-                        Text(
-                          'Name: ${order['paymentData']['first_name']}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          'Amount: ${order['paymentData']['amount']} birr',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          'Status: ${order['orderStatus']}',
-                          style: TextStyle(color: Colors.white),
+                        OrderTrackingWidget(
+                          orderStatus: order['orderStatus'],
+                          formattedDate: formattedDate,
                         ),
                       ],
                     ),
@@ -124,6 +117,64 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 );
               },
             ),
+    );
+  }
+}
+
+class OrderTrackingWidget extends StatelessWidget {
+  final String orderStatus;
+  final formattedDate;
+  const OrderTrackingWidget(
+      {required this.orderStatus, required this.formattedDate});
+
+  @override
+  Widget build(BuildContext context) {
+    List<TextDto> orderList = [
+      TextDto("Your order has been placed", "${formattedDate} - 10:47pm"),
+      TextDto("Seller has processed your order", "Sun, 27th Mar '22 - 10:19am"),
+      TextDto("Your item has been picked up by courier partner.",
+          "Tue, 29th Mar '22 - 5:00pm"),
+    ];
+
+    List<TextDto> shippedList = [
+      TextDto("Your order has been shipped", "Tue, 29th Mar '22 - 5:04pm"),
+      TextDto("Your item has been received in the nearest hub to you.", null),
+    ];
+
+    List<TextDto> outOfDeliveryList = [
+      TextDto("Your order is out for delivery", "Thu, 31th Mar '22 - 2:27pm"),
+    ];
+
+    List<TextDto> deliveredList = [
+      TextDto("Your order has been delivered", "Thu, 31th Mar '22 - 3:58pm"),
+    ];
+
+    Status status;
+    switch (orderStatus) {
+      case 'pending':
+        status = Status.order;
+        break;
+      case 'picked up':
+        status = Status.shipped;
+        break;
+      case 'delivering':
+        status = Status.outOfDelivery;
+        break;
+      case 'delivered':
+        status = Status.delivered;
+        break;
+      default:
+        status = Status.order;
+    }
+
+    return OrderTracker(
+      status: status,
+      activeColor: Colors.green,
+      inActiveColor: Colors.grey[300],
+      orderTitleAndDateList: orderList,
+      shippedTitleAndDateList: shippedList,
+      outOfDeliveryTitleAndDateList: outOfDeliveryList,
+      deliveredTitleAndDateList: deliveredList,
     );
   }
 }
