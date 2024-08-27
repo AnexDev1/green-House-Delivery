@@ -79,7 +79,9 @@ class _SignUpPageState extends State<RegisterPage> {
   }
 
   Widget _entryField(String title, TextEditingController controller,
-      {bool isPassword = false, String? errorText}) {
+      {bool isPassword = false,
+      String? errorText,
+      TextInputType keyboardType = TextInputType.text}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -93,13 +95,16 @@ class _SignUpPageState extends State<RegisterPage> {
             height: 10,
           ),
           TextField(
-              controller: controller,
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true,
-                  errorText: errorText))
+            controller: controller,
+            obscureText: isPassword,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              fillColor: Color(0xfff3f3f4),
+              filled: true,
+              errorText: errorText,
+            ),
+          ),
         ],
       ),
     );
@@ -219,13 +224,14 @@ class _SignUpPageState extends State<RegisterPage> {
     return Column(
       children: <Widget>[
         _entryField("Full Name", _usernameController,
-            errorText: _usernameError),
+            errorText: _usernameError, keyboardType: TextInputType.name),
         _entryField("Phone Number", _phoneNumberController,
-            errorText: _phoneNumberError),
-        _entryField("Email", _emailController, errorText: _emailError),
+            errorText: _phoneNumberError, keyboardType: TextInputType.phone),
+        _entryField("Email", _emailController,
+            errorText: _emailError, keyboardType: TextInputType.emailAddress),
         _entryField("Password", _passwordController,
             isPassword: true, errorText: _passwordError),
-        _entryField("confirm Password", _confirmPasswordController,
+        _entryField("Confirm Password", _confirmPasswordController,
             isPassword: true, errorText: _confirmPasswordError),
       ],
     );
