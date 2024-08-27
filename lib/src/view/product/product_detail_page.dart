@@ -1,7 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:greenhouse/src/utils/cart_utils.dart';
 
 import '../../models/product.dart';
+import '../../models/rating_review.dart';
+import '../../utils/cart_utils.dart';
+import '../rating_review_form.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -15,6 +18,11 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int quantity = 1;
   bool isFav = false;
+  final DatabaseReference reviewsRef =
+      FirebaseDatabase.instance.ref().child('reviews');
+  double averageRating = 0.0;
+  int totalReviews = 0;
+
   void incrementQuantity() {
     setState(() {
       quantity++;
@@ -35,8 +43,42 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     });
   }
 
+  void _addReview(RatingReview review) async {
+    try {
+      await reviewsRef.push().set(review.toMap());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Review added successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to add review: $e')),
+      );
+    }
+  }
+
+  void _calculateAverageRating(List<RatingReview> reviews) {
+    if (reviews.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          averageRating = 0.0;
+          totalReviews = 0;
+        });
+      });
+      return;
+    }
+    double sum = reviews.fold(0, (sum, review) => sum + review.rating);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        averageRating = sum / reviews.length;
+        totalReviews = reviews.length;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -97,7 +139,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           const Icon(Icons.star,
                               size: 18, color: Color(0xff3fb31e)),
                           Text(
-                            '${widget.product.rating} (653 Reviews)',
+                            '$averageRating ($totalReviews Reviews)',
                             style: const TextStyle(fontSize: 18),
                           ),
                         ],
@@ -126,8 +168,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               iconSize: 20,
-                              icon:
-                                  const Icon(Icons.remove, color: Colors.black),
+                              icon: Icon(Icons.remove,
+                                  color:
+                                      isDarkMode ? Colors.white : Colors.black),
                               onPressed: decrementQuantity,
                             ),
                           ),
@@ -169,7 +212,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ),
                   const SizedBox(
                     height: 30,
-                  ), // This will push the button to the bottom
+                  ),
                   TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Color(0xff3fb31e),
@@ -188,6 +231,52 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       'Add to Cart',
                       style: TextStyle(color: Colors.white),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  RatingReviewForm(
+                    onSubmit: _addReview,
+                    product: widget.product,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  StreamBuilder(
+                    stream: reviewsRef.onValue,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+                      if (!snapshot.hasData ||
+                          snapshot.data!.snapshot.value == null) {
+                        return Text('No reviews available');
+                      }
+                      final Map<dynamic, dynamic>? reviewsMap = snapshot
+                          .data!.snapshot.value as Map<dynamic, dynamic>?;
+                      if (reviewsMap == null || reviewsMap.isEmpty) {
+                        return Text('No reviews available');
+                      }
+                      final reviews = reviewsMap.values
+                          .map((e) => RatingReview.fromMap(
+                              Map<String, dynamic>.from(e)))
+                          .where(
+                              (review) => review.productId == widget.product.id)
+                          .toList();
+                      _calculateAverageRating(reviews);
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: reviews.length,
+                        itemBuilder: (context, index) {
+                          final review = reviews[index];
+                          return ListTile(
+                            title: Text(review.user),
+                            subtitle: Text(review.review),
+                            trailing: Text(review.rating.toString()),
+                          );
+                        },
+                      );
+                    },
                   )
                 ],
               ),
