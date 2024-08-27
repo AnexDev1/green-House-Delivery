@@ -61,6 +61,8 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final firstName = username.split(" ")[0];
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       child: DefaultTabController(
         length: 6,
@@ -119,8 +121,10 @@ class _HomePageState extends State<HomePage>
                             ),
                           );
                         },
-                        child: const Text('See All',
-                            style: TextStyle(color: Colors.black)),
+                        child: Text('See All',
+                            style: TextStyle(
+                                color:
+                                    isDarkMode ? Colors.white : Colors.black)),
                       ),
                     ],
                   ),

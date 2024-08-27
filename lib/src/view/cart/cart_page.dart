@@ -14,7 +14,10 @@ class CartPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Cart'),
+        title: const Text(
+          'Cart',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<CartProvider>(
         builder: (context, cartProvider, child) {
@@ -28,7 +31,13 @@ class CartPage extends StatelessWidget {
             children: [
               Expanded(
                 child: cartItems.isEmpty
-                    ? const Center(child: Text('No items in cart'))
+                    ? Center(
+                        child: Text(
+                          'No items in cart',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                      )
                     : ListView.builder(
                         itemCount: cartItems.length,
                         itemBuilder: (context, index) {

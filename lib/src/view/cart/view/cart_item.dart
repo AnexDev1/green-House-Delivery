@@ -18,7 +18,7 @@ class CartItemWidget extends StatelessWidget {
     final iconColor = isDarkMode ? Colors.white : Colors.black;
 
     return Container(
-      color: Colors.grey[400],
+      color: isDarkMode ? Colors.grey[700] : Colors.grey[400],
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -33,17 +33,24 @@ class CartItemWidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(width: 20), // Adjust the width as needed
+            SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.name, style: TextStyle(fontSize: 16)),
+                Text(
+                  item.name,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
                 SizedBox(height: 4),
-                Text('Quantity: ${item.quantity}',
-                    style: TextStyle(fontSize: 14)),
+                Text(
+                  'Quantity: ${item.quantity}',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                ),
                 SizedBox(height: 4),
-                Text('${item.price * item.quantity} birr',
-                    style: TextStyle(fontSize: 14)),
+                Text(
+                  '${item.price * item.quantity} birr',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                ),
               ],
             ),
             Spacer(),
