@@ -1,3 +1,4 @@
+// lib/src/view/home/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/product.dart';
 import 'package:greenhouse/src/services/firebase_database_service.dart';
@@ -137,7 +138,22 @@ class _HomePageState extends State<HomePage>
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
-                        return ProductList(filteredProducts: _filteredProducts);
+                        return AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            final offsetAnimation = Tween<Offset>(
+                              begin: const Offset(1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(animation);
+                            return SlideTransition(
+                                position: offsetAnimation, child: child);
+                          },
+                          child: ProductList(
+                            key: ValueKey<int>(_tabController.index),
+                            filteredProducts: _filteredProducts,
+                          ),
+                        );
                       }
                     },
                   ),

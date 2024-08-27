@@ -64,7 +64,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
                 return Card(
                   color: order['orderStatus'] == 'pending'
-                      ? Colors.amber
+                      ? Colors.grey[400]
                       : Color(0xff3fb31e),
                   margin: const EdgeInsets.symmetric(
                     horizontal: 20.0,
