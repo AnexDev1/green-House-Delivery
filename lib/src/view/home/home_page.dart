@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/product.dart';
-import 'package:greenhouse/src/services/firebase_database_service.dart';
 import 'package:greenhouse/src/view/home/view/carousel.dart';
 import 'package:greenhouse/src/view/home/view/category_tab.dart';
 import 'package:greenhouse/src/view/home/view/searchbar.dart';
 import 'package:greenhouse/src/view/home/view/user_avatar.dart';
 import 'package:greenhouse/src/view/product/view/product_list.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/productProvider.dart';
 import '../../utils/payment_utls.dart';
 import '../../utils/product_filter.dart';
 import '../product/product_list_page.dart';
@@ -21,8 +22,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late Future<List<Product>> _productsFuture;
-  List<Product> _filteredProducts = [];
   String username = 'Loading...';
 
   @override
@@ -34,20 +33,11 @@ class _HomePageState extends State<HomePage>
       });
     });
     _tabController = TabController(length: 6, vsync: this);
-    _productsFuture = FirebaseDatabaseService().fetchProducts();
     _tabController.addListener(() {
       if (!_tabController.indexIsChanging) {
-        _updateFilteredProducts();
+        Provider.of<ProductProvider>(context, listen: false)
+            .setCategory(getCurrentCategory(_tabController.index));
       }
-    });
-    _updateFilteredProducts(); // Initial update
-  }
-
-  void _updateFilteredProducts() async {
-    final products = await _productsFuture;
-    setState(() {
-      String selectedCategory = getCurrentCategory(_tabController.index);
-      _filteredProducts = filterProducts(products, selectedCategory);
     });
   }
 
@@ -59,7 +49,9 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final firstName = username.split(" ")[0];
+
     return SafeArea(
       child: DefaultTabController(
         length: 6,
@@ -111,15 +103,20 @@ class _HomePageState extends State<HomePage>
                             context,
                             MaterialPageRoute(
                               builder: (context) => ProductListPage(
-                                allProducts: _filteredProducts,
+                                allProducts: Provider.of<ProductProvider>(
+                                        context,
+                                        listen: false)
+                                    .filteredProducts,
                                 category:
                                     getCurrentCategory(_tabController.index),
                               ),
                             ),
                           );
                         },
-                        child: const Text('See All',
-                            style: TextStyle(color: Colors.black)),
+                        child: Text('See All',
+                            style: TextStyle(
+                                color:
+                                    isDarkMode ? Colors.white : Colors.black)),
                       ),
                     ],
                   ),
@@ -127,18 +124,25 @@ class _HomePageState extends State<HomePage>
                 CategoryTabBar(controller: _tabController),
                 SizedBox(
                   height: 270,
-                  child: FutureBuilder<List<Product>>(
-                    future: _productsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        return ProductList(filteredProducts: _filteredProducts);
-                      }
+                  child: Consumer<ProductProvider>(
+                    builder: (context, productProvider, child) {
+                      return FutureBuilder<List<Product>>(
+                        future: productProvider.productsFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            return ProductList(
+                                filteredProducts:
+                                    productProvider.filteredProducts);
+                          } else {
+                            return Text('No products found');
+                          }
+                        },
+                      );
                     },
                   ),
                 ),

@@ -16,6 +16,14 @@ class SignupLogic {
     return user?.emailVerified ?? false;
   }
 
+  Future<void> sendVerificationEmail() async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
+  Stream<User?> get userChanges => _auth.userChanges();
   Future<void> handleSignup(
       BuildContext context,
       TextEditingController usernameController,

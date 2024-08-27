@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
-import 'package:greenhouse/src/view/settings/settings_page.dart';
+import 'package:greenhouse/src/view/profile/getHelp/getHelpPage.dart';
+import 'package:greenhouse/src/view/profile/settings/settings_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,6 +84,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   icon: Icons.help,
                   onTap: () {
                     // Handle get help
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => GetHelpPage(),
+                      ),
+                    );
                   },
                 ),
                 _buildListTile(
