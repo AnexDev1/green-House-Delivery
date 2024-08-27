@@ -33,18 +33,24 @@ class CartPage extends StatelessWidget {
                         itemCount: cartItems.length,
                         itemBuilder: (context, index) {
                           final item = cartItems[index];
-                          return CartItemWidget(
-                            item: item,
-                            onRemove: () {
-                              cartProvider.removeProduct(item);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text('${item.name} removed from cart'),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            },
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5.0,
+                              horizontal: 7.0,
+                            ),
+                            child: CartItemWidget(
+                              item: item,
+                              onRemove: () {
+                                cartProvider.removeProduct(item);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content:
+                                        Text('${item.name} removed from cart'),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                            ),
                           );
                         },
                       ),
