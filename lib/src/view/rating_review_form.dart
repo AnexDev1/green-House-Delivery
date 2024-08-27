@@ -17,7 +17,7 @@ class RatingReviewForm extends StatefulWidget {
 class _RatingReviewFormState extends State<RatingReviewForm> {
   final _formKey = GlobalKey<FormState>();
   final _reviewController = TextEditingController();
-  double _rating = 0.0;
+  double _rating = 0.0; // Set default rating to 0.0
   bool _isAnonymous = true;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _userEmail;
@@ -45,7 +45,7 @@ class _RatingReviewFormState extends State<RatingReviewForm> {
       widget.onSubmit(review);
       _reviewController.clear();
       setState(() {
-        _rating = 0.0;
+        _rating = 0.0; // Reset rating to 0.0
         _isAnonymous = true;
       });
     }
@@ -88,18 +88,19 @@ class _RatingReviewFormState extends State<RatingReviewForm> {
               );
             }),
           ),
-          TextFormField(
-            controller: _reviewController,
-            decoration: InputDecoration(labelText: 'Write a review'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a review';
-              }
-              return null;
-            },
-          ),
+          if (_rating > 0)
+            TextFormField(
+              controller: _reviewController,
+              decoration: InputDecoration(labelText: 'Write a review'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a review';
+                }
+                return null;
+              },
+            ),
           ElevatedButton(
-            onPressed: _submit,
+            onPressed: _rating > 0 ? _submit : null,
             child: Text('Submit'),
           ),
         ],

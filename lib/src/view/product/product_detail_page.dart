@@ -245,9 +245,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   StreamBuilder(
                     stream: reviewsRef.onValue,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
                       if (!snapshot.hasData ||
                           snapshot.data!.snapshot.value == null) {
                         return Text('No reviews available');
