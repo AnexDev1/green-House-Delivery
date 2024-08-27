@@ -20,7 +20,7 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-              height: 200.0,
+              height: 185.0,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index, reason) {
                 setState(

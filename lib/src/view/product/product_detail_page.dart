@@ -22,6 +22,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       FirebaseDatabase.instance.ref().child('reviews');
   double averageRating = 0.0;
   int totalReviews = 0;
+  List<RatingReview> reviews = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReviews();
+  }
 
   void incrementQuantity() {
     setState(() {
@@ -49,6 +56,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Review added successfully')),
       );
+      _fetchReviews(); // Fetch reviews after adding a new review
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to add review: $e')),
@@ -56,22 +64,41 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     }
   }
 
-  void _calculateAverageRating(List<RatingReview> reviews) {
-    if (reviews.isEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+  void _fetchReviews() {
+    reviewsRef.onValue.listen((event) {
+      final Map<dynamic, dynamic>? reviewsMap =
+          event.snapshot.value as Map<dynamic, dynamic>?;
+      if (reviewsMap == null || reviewsMap.isEmpty) {
         setState(() {
+          reviews = [];
           averageRating = 0.0;
           totalReviews = 0;
         });
+        return;
+      }
+      final fetchedReviews = reviewsMap.values
+          .map((e) => RatingReview.fromMap(Map<String, dynamic>.from(e)))
+          .where((review) => review.productId == widget.product.id)
+          .toList();
+      _calculateAverageRating(fetchedReviews);
+      setState(() {
+        reviews = fetchedReviews;
+      });
+    });
+  }
+
+  void _calculateAverageRating(List<RatingReview> reviews) {
+    if (reviews.isEmpty) {
+      setState(() {
+        averageRating = 0.0;
+        totalReviews = 0;
       });
       return;
     }
     double sum = reviews.fold(0, (sum, review) => sum + review.rating);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        averageRating = sum / reviews.length;
-        totalReviews = reviews.length;
-      });
+    setState(() {
+      averageRating = sum / reviews.length;
+      totalReviews = reviews.length;
     });
   }
 
@@ -242,39 +269,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  StreamBuilder(
-                    stream: reviewsRef.onValue,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData ||
-                          snapshot.data!.snapshot.value == null) {
-                        return Text('No reviews available');
-                      }
-                      final Map<dynamic, dynamic>? reviewsMap = snapshot
-                          .data!.snapshot.value as Map<dynamic, dynamic>?;
-                      if (reviewsMap == null || reviewsMap.isEmpty) {
-                        return Text('No reviews available');
-                      }
-                      final reviews = reviewsMap.values
-                          .map((e) => RatingReview.fromMap(
-                              Map<String, dynamic>.from(e)))
-                          .where(
-                              (review) => review.productId == widget.product.id)
-                          .toList();
-                      _calculateAverageRating(reviews);
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: reviews.length,
-                        itemBuilder: (context, index) {
-                          final review = reviews[index];
-                          return ListTile(
-                            title: Text(review.user),
-                            subtitle: Text(review.review),
-                            trailing: Text(review.rating.toString()),
-                          );
-                        },
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: reviews.length,
+                    itemBuilder: (context, index) {
+                      final review = reviews[index];
+                      return ListTile(
+                        title: Text(review.user),
+                        subtitle: Text(review.review),
+                        trailing: Text(review.rating.toString()),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),
