@@ -124,25 +124,25 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Text(
+                    widget.product.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow:
+                        TextOverflow.ellipsis, // Add ellipsis for long titles
+                  ),
+                  const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      const Icon(Icons.star,
+                          size: 18, color: Color(0xff3fb31e)),
                       Text(
-                        widget.product.name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(Icons.star,
-                              size: 18, color: Color(0xff3fb31e)),
-                          Text(
-                            '$averageRating ($totalReviews Reviews)',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ],
+                        '$averageRating ($totalReviews Reviews)',
+                        style: const TextStyle(fontSize: 18),
+                        overflow: TextOverflow
+                            .ellipsis, // Add ellipsis for long texts
                       ),
                     ],
                   ),
