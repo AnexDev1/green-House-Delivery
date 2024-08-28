@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/profile/getHelp/getHelpPage.dart';
 import 'package:greenhouse/src/view/profile/settings/settings_page.dart';
+import 'package:greenhouse/src/view/profile/updateProfile/updateProfilePage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,17 +22,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    loadUsername().then((loadedUsername) {
-      setState(() {
-        _username = loadedUsername;
-      });
-    });
+    loadUsername();
   }
 
-  Future<String> loadUsername() async {
+  Future<void> loadUsername() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('username') ??
-        'User'; // Default to 'User' if not found
+    setState(() {
+      _username = prefs.getString('username') ?? 'User';
+    });
   }
 
   @override
@@ -47,7 +45,19 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.only(
                 top: 20.0,
               ),
-              child: _profileRow(username: _username, userEmail: userEmail),
+              child: GestureDetector(
+                onTap: () async {
+                  bool? result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UpdateProfilePage()),
+                  );
+                  if (result == true) {
+                    loadUsername(); // Reload username after returning from update page
+                  }
+                },
+                child: _profileRow(username: _username, userEmail: userEmail),
+              ),
             ),
             const SizedBox(
               height: 20,

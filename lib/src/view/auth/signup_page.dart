@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/auth/widget/bezierContainer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controllers/auth_controller.dart';
 
@@ -27,6 +28,7 @@ class _SignUpPageState extends State<RegisterPage> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final SignupLogic _signupLogic = SignupLogic();
+
   void _setLoading(bool isLoading) {
     setState(() {
       _isLoading = isLoading;
@@ -78,6 +80,11 @@ class _SignUpPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  Future<void> _saveUsernameToPrefs(String username) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('username', username);
+  }
+
   Widget _entryField(String title, TextEditingController controller,
       {bool isPassword = false,
       String? errorText,
@@ -120,7 +127,8 @@ class _SignUpPageState extends State<RegisterPage> {
       ),
       onPressed: _isLoading
           ? null
-          : () => _signupLogic.handleSignup(
+          : () async {
+              await _signupLogic.handleSignup(
                 context,
                 _usernameController,
                 _phoneNumberController,
@@ -133,7 +141,9 @@ class _SignUpPageState extends State<RegisterPage> {
                 _setEmailError,
                 _setPasswordError,
                 _setConfirmPasswordError,
-              ),
+              );
+              await _saveUsernameToPrefs(_usernameController.text);
+            },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),
