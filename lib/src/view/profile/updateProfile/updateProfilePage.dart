@@ -15,8 +15,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _confirmNewPasswordController =
       TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isNameLoading = false;
+  bool _isPasswordLoading = false;
 
   void _updateName() async {
+    setState(() {
+      _isNameLoading = true;
+    });
     User? user = _auth.currentUser;
     if (user != null && _nameController.text.isNotEmpty) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,9 +33,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           context, true); // Navigate back to ProfilePage with a result
     }
     _nameController.clear();
+    setState(() {
+      _isNameLoading = false;
+    });
   }
 
   void _updatePassword() async {
+    setState(() {
+      _isPasswordLoading = true;
+    });
     User? user = _auth.currentUser;
     if (user != null) {
       if (_oldPasswordController.text.isNotEmpty &&
@@ -63,6 +74,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         }
       }
     }
+    setState(() {
+      _isPasswordLoading = false;
+    });
   }
 
   void _deleteAccount(String password) async {
@@ -177,7 +191,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                         SizedBox(height: 10),
                         ElevatedButton(
-                          onPressed: _updateName,
+                          onPressed: _isNameLoading ? null : _updateName,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: EdgeInsets.symmetric(
@@ -188,8 +202,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text('Update Name',
-                              style: TextStyle(color: textColor)),
+                          child: _isNameLoading
+                              ? CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(textColor),
+                                )
+                              : Text('Update Name',
+                                  style: TextStyle(color: textColor)),
                         ),
                         SizedBox(height: 20),
                         TextField(
@@ -229,7 +248,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                         SizedBox(height: 10),
                         ElevatedButton(
-                          onPressed: _updatePassword,
+                          onPressed:
+                              _isPasswordLoading ? null : _updatePassword,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: EdgeInsets.symmetric(
@@ -240,8 +260,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text('Update Password',
-                              style: TextStyle(color: textColor)),
+                          child: _isPasswordLoading
+                              ? CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.green),
+                                )
+                              : Text('Update Password',
+                                  style: TextStyle(color: textColor)),
                         ),
                       ],
                     ),
