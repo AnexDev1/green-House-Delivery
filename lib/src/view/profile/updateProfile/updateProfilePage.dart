@@ -16,64 +16,52 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void _updateProfile() async {
+  void _updateName() async {
+    User? user = _auth.currentUser;
+    if (user != null && _nameController.text.isNotEmpty) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', _nameController.text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Name updated successfully')),
+      );
+      Navigator.pop(
+          context, true); // Navigate back to ProfilePage with a result
+    }
+    _nameController.clear();
+  }
+
+  void _updatePassword() async {
     User? user = _auth.currentUser;
     if (user != null) {
-      try {
-        if (_nameController.text.isNotEmpty) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('username', _nameController.text);
-          _nameController.clear(); // Clear the name input field
-        }
-        if (_oldPasswordController.text.isNotEmpty &&
-            _newPasswordController.text.isNotEmpty &&
-            _confirmNewPasswordController.text.isNotEmpty) {
-          if (_newPasswordController.text ==
-              _confirmNewPasswordController.text) {
-            try {
-              AuthCredential credential = EmailAuthProvider.credential(
-                email: user.email!,
-                password: _oldPasswordController.text,
-              );
-              await user.reauthenticateWithCredential(credential);
-              await user.updatePassword(_newPasswordController.text);
-              _oldPasswordController.clear();
-              _newPasswordController.clear();
-              _confirmNewPasswordController.clear();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Profile updated successfully')),
-              );
-              Navigator.pop(
-                  context, true); // Navigate back to ProfilePage with a result
-            } on FirebaseAuthException catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error: ${e.message}')),
-              );
-            }
-          } else {
+      if (_oldPasswordController.text.isNotEmpty &&
+          _newPasswordController.text.isNotEmpty &&
+          _confirmNewPasswordController.text.isNotEmpty) {
+        if (_newPasswordController.text == _confirmNewPasswordController.text) {
+          try {
+            AuthCredential credential = EmailAuthProvider.credential(
+              email: user.email!,
+              password: _oldPasswordController.text,
+            );
+            await user.reauthenticateWithCredential(credential);
+            await user.updatePassword(_newPasswordController.text);
+            _oldPasswordController.clear();
+            _newPasswordController.clear();
+            _confirmNewPasswordController.clear();
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('New passwords do not match')),
+              SnackBar(content: Text('Password updated successfully')),
+            );
+            Navigator.pop(context, true);
+          } on FirebaseAuthException catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error: ${e.message}')),
             );
           }
-        }
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'requires-recent-login') {
-          _reauthenticateUser();
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.message}')),
+            SnackBar(content: Text('New passwords do not match')),
           );
         }
       }
-    }
-  }
-
-  void _reauthenticateUser() async {
-    User? user = _auth.currentUser;
-    if (user != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please reauthenticate to update your profile')),
-      );
     }
   }
 
@@ -109,29 +97,44 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Are you sure you want to delete your account?'),
+              SizedBox(height: 10),
               TextField(
                 controller: passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 ),
                 obscureText: true,
+                style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: Text('Cancel',
+                  style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black)),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _deleteAccount(passwordController.text); // Delete the account
+                Navigator.of(context).pop();
+                _deleteAccount(passwordController.text);
               },
-              child: Text('Delete'),
+              child: Text('Delete',
+                  style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black)),
             ),
           ],
         );
@@ -141,94 +144,133 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return Scaffold(
       appBar: AppBar(title: Text('Update Profile')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
                 child: Column(
                   children: [
-                    TextField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      ),
+                    Column(
+                      children: [
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Name',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                          ),
+                          style: TextStyle(color: textColor),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: _updateName,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 15),
+                            textStyle:
+                                TextStyle(fontSize: 16, color: textColor),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('Update Name',
+                              style: TextStyle(color: textColor)),
+                        ),
+                        SizedBox(height: 20),
+                        TextField(
+                          controller: _oldPasswordController,
+                          decoration: InputDecoration(
+                            labelText: 'Old Password',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                          ),
+                          obscureText: true,
+                          style: TextStyle(color: textColor),
+                        ),
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: _newPasswordController,
+                          decoration: InputDecoration(
+                            labelText: 'New Password',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                          ),
+                          obscureText: true,
+                          style: TextStyle(color: textColor),
+                        ),
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: _confirmNewPasswordController,
+                          decoration: InputDecoration(
+                            labelText: 'Confirm New Password',
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                          ),
+                          obscureText: true,
+                          style: TextStyle(color: textColor),
+                        ),
+                        SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: _updatePassword,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 15),
+                            textStyle:
+                                TextStyle(fontSize: 16, color: textColor),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('Update Password',
+                              style: TextStyle(color: textColor)),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: _oldPasswordController,
-                      decoration: InputDecoration(
-                        labelText: 'Old Password',
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      ),
-                      obscureText: true,
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: _newPasswordController,
-                      decoration: InputDecoration(
-                        labelText: 'New Password',
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      ),
-                      obscureText: true,
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      controller: _confirmNewPasswordController,
-                      decoration: InputDecoration(
-                        labelText: 'Confirm New Password',
-                        border: OutlineInputBorder(),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                      ),
-                      obscureText: true,
+                    SizedBox(height: 20),
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: _showDeleteConfirmationDialog,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 15),
+                            textStyle:
+                                TextStyle(fontSize: 16, color: textColor),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text('Delete Account',
+                              style: TextStyle(color: textColor)),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ),
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: _updateProfile,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    textStyle: TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text('Update Profile'),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _showDeleteConfirmationDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    textStyle: TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text('Delete Account'),
-                ),
-              ],
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
