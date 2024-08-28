@@ -252,25 +252,27 @@ class _SignUpPageState extends State<RegisterPage> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    const SizedBox(
-                      height: 50,
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: height * .2),
+                  _title(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const SizedBox(height: 50),
+                          _emailPasswordWidget(),
+                          const SizedBox(height: 20),
+                          _submitButton(),
+                          SizedBox(height: height * .14),
+                          _loginAccountLabel(),
+                        ],
+                      ),
                     ),
-                    _emailPasswordWidget(),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: height * .14),
-                    _loginAccountLabel(),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
