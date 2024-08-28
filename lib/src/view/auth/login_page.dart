@@ -39,10 +39,52 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  void _handleForgotPassword() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController _resetEmailController = TextEditingController();
+        return AlertDialog(
+          title: Text('Reset Password'),
+          content: TextField(
+            controller: _resetEmailController,
+            decoration: InputDecoration(
+              labelText: 'Enter your email',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  await _loginLogic.sendPasswordResetEmail(_resetEmailController.text);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Password reset email sent')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to send password reset email: $e')),
+                  );
+                }
+              },
+              child: Text('Send'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _entryField(String title, TextEditingController controller,
       {bool isPassword = false,
-      String? errorText,
-      TextInputType keyboardType = TextInputType.text}) {
+        String? errorText,
+        TextInputType keyboardType = TextInputType.text}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -84,13 +126,13 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: _isLoading
           ? null
           : () => _loginLogic.handleLogin(
-                context,
-                _emailController,
-                _passwordController,
-                _setLoading,
-                _setEmailError,
-                _setPasswordError,
-              ),
+        context,
+        _emailController,
+        _passwordController,
+        _setLoading,
+        _setEmailError,
+        _setPasswordError,
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -110,14 +152,14 @@ class _LoginPageState extends State<LoginPage> {
                 colors: [Color(0xff267310), Color(0xff3fb31e)])),
         child: _isLoading
             ? CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.white,
-                ),
-              )
+          valueColor: AlwaysStoppedAnimation<Color>(
+            Colors.white,
+          ),
+        )
             : const Text(
-                'Login',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
+          'Login',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
       ),
     );
   }
@@ -274,43 +316,46 @@ class _LoginPageState extends State<LoginPage> {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
         body: SizedBox(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: const BezierContainer()),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
-                  const SizedBox(height: 50),
-                  _emailPasswordWidget(),
-                  const SizedBox(height: 20),
-                  _submitButton(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.centerRight,
-                    child: const Text('Forgot Password ?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                  top: -height * .15,
+                  right: -MediaQuery.of(context).size.width * .4,
+                  child: const BezierContainer()),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .2),
+                      _title(),
+                      const SizedBox(height: 50),
+                      _emailPasswordWidget(),
+                      const SizedBox(height: 20),
+                      _submitButton(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: _handleForgotPassword,
+                          child: const Text('Forgot Password ?',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w500)),
+                        ),
+                      ),
+                      _divider(),
+                      _facebookButton(),
+                      SizedBox(height: height * .055),
+                      _createAccountLabel(),
+                    ],
                   ),
-                  _divider(),
-                  _facebookButton(),
-                  SizedBox(height: height * .055),
-                  _createAccountLabel(),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    ));
+        ));
   }
 }

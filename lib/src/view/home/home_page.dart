@@ -87,8 +87,7 @@ class _HomePageState extends State<HomePage>
                     ],
                   ),
                   const UserAvatar(
-                    imageUrl:
-                        'https://randomuser.me/api/portraits/women/91.jpg',
+                    imageUrl: 'https://randomuser.me/api/portraits/lego/4.jpg',
                   ),
                 ],
               ),

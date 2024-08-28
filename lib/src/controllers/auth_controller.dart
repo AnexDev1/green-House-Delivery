@@ -99,7 +99,6 @@ class SignupLogic {
     }
   }
 }
-
 class LoginLogic {
   final FirebaseAuthService _authService = FirebaseAuthService();
 
@@ -157,5 +156,9 @@ class LoginLogic {
     } finally {
       setLoading(false);
     }
+  }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 }

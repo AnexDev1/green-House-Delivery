@@ -153,7 +153,7 @@ Widget _profileRow({required String username, required String userEmail}) {
       const CircleAvatar(
         radius: 30,
         backgroundImage:
-            NetworkImage('https://randomuser.me/api/portraits/men/33.jpg'),
+            NetworkImage('https://randomuser.me/api/portraits/lego/4.jpg'),
       ),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
