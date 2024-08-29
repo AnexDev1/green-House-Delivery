@@ -19,7 +19,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
+    String userEmail = FirebaseAuth.instance.currentUser?.email ?? 'Loading...';
 
     return Scaffold(
       body: Padding(

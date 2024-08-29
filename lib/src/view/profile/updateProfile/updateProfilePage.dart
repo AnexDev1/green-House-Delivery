@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/view/auth/signup_page.dart';
 
 import '../../../controllers/profile_controller.dart';
 import 'custom_fields.dart';
@@ -9,6 +10,7 @@ class UpdateProfilePage extends StatefulWidget {
 }
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
+  final FocusNode _focusNode = FocusNode();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
@@ -60,6 +62,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 _controller.deleteAccount(context, passwordController.text);
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => RegisterPage()));
               },
               child: Text('Delete'),
             ),
@@ -67,6 +71,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override

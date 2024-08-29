@@ -5,6 +5,7 @@ import 'package:greenhouse/main.dart';
 
 import '../../models/product.dart';
 import '../../services/firebase_database_service.dart';
+import '../product/product_detail_page.dart';
 import '../product/view/product_card.dart';
 
 class SearchPage extends StatefulWidget {
@@ -88,9 +89,17 @@ class _SearchPageState extends State<SearchPage> {
                   itemCount: _searchResults.length,
                   itemBuilder: (context, index) {
                     final product = _searchResults[index];
-                    return ProductCard(
-                      product: product,
-                      themeMode: MyApp.of(context).themeMode,
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProductDetailPage(product: product),
+                        ),
+                      ),
+                      child: ProductCard(
+                        product: product,
+                        themeMode: MyApp.of(context).themeMode,
+                      ),
                     );
                   },
                 )
