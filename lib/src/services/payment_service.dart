@@ -1,4 +1,6 @@
 import 'package:chapa_unofficial/chapa_unofficial.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:greenhouse/main.dart';
@@ -100,16 +102,16 @@ class PaymentService {
     }
   }
 
-  Future<void> startPayment(
+  Future<void> startPaymentInit(
       BuildContext context,
       String txRef,
-      String username,
-      String phoneNumber,
       double totalAmount,
       List<CartItem> cartItems,
       String userEmail,
       String orderTime,
       Position currentPosition) async {
+    String? username = await fetchUsername();
+    String? phoneNumber = await fetchPhoneNumber();
     await Chapa.getInstance.startPayment(
       firstName: username,
       phoneNumber: phoneNumber,
@@ -135,5 +137,39 @@ class PaymentService {
         print("Payment Error: $errorMsg");
       },
     );
+  }
+
+  Future<String?> fetchUsername() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+      DataSnapshot snapshot = await ref.get();
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> users = snapshot.value as Map<dynamic, dynamic>;
+        for (var key in users.keys) {
+          if (users[key]['email'] == user.email) {
+            return users[key]['username'];
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  Future<String?> fetchPhoneNumber() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('users');
+      DataSnapshot snapshot = await ref.get();
+      if (snapshot.exists) {
+        Map<dynamic, dynamic> users = snapshot.value as Map<dynamic, dynamic>;
+        for (var key in users.keys) {
+          if (users[key]['email'] == user.email) {
+            return users[key]['phone'];
+          }
+        }
+      }
+    }
+    return null;
   }
 }

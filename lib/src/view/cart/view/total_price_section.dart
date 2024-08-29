@@ -8,8 +8,8 @@ import 'package:intl/intl.dart';
 
 import '../../../utils/payment_utls.dart';
 
-String username = '';
-String phoneNumber = '';
+String? username;
+String? phoneNumber;
 String? userEmail = '';
 String orderTime = '';
 
@@ -125,11 +125,9 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
             final double totalAmount = widget.totalAmount;
             String txRef = generateTxRef();
             isVerified
-                ? await paymentService.startPayment(
+                ? await paymentService.startPaymentInit(
                     context,
                     txRef,
-                    username,
-                    phoneNumber,
                     totalAmount,
                     widget.cartItems,
                     userEmail!,
