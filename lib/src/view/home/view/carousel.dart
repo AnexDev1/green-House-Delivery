@@ -12,8 +12,14 @@ class VerticalImageCarousel extends StatefulWidget {
 
 class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
   int _currentIndex = 0;
-
   final CarouselController _carouselController = CarouselController();
+
+  @override
+  void dispose() {
+    _carouselController.stopAutoPlay();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,11 +29,9 @@ class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
               height: 185.0,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index, reason) {
-                setState(
-                  () {
-                    _currentIndex = index;
-                  },
-                );
+                setState(() {
+                  _currentIndex = index;
+                });
               },
               viewportFraction: 1.0,
               autoPlay: true,
