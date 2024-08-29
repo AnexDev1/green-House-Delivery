@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/cart_page.dart';
 import 'package:greenhouse/src/view/home/home_page.dart';
+import 'package:greenhouse/src/view/home/search_page.dart';
 import 'package:greenhouse/src/view/order/order_history_page.dart';
 import 'package:greenhouse/src/view/profile/profile_page.dart';
 
@@ -19,8 +20,8 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     const CartPage(),
     OrderHistoryPage(),
-    const ProfilePage() // Assuming HomePage is one of your pages
-    // Add other pages here, e.g., SearchPage(), ProfilePage(), etc.
+    SearchPage(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -49,6 +50,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.credit_card),
             label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_sharp),
