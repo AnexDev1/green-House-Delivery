@@ -36,4 +36,28 @@ class FirebaseAuthService {
       return null;
     }
   }
+
+  Future<void> updatePassword(String oldPassword, String newPassword) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: oldPassword,
+      );
+      await user.reauthenticateWithCredential(credential);
+      await user.updatePassword(newPassword);
+    }
+  }
+
+  Future<void> deleteAccount(String password) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null) {
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+      await user.delete();
+    }
+  }
 }

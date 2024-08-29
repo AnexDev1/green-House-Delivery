@@ -1,9 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import '../models/product.dart';
 
 class FirebaseDatabaseService {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<void> updateName(String name) async {
+    User? user = _auth.currentUser;
+    if (user != null && name.isNotEmpty) {
+      await _dbRef.child('users').child(user.uid).update({
+        'username': name,
+      });
+    }
+  }
 
   Future<List<Product>> fetchProducts() async {
     DataSnapshot snapshot = await _dbRef.child('products').get();
