@@ -18,7 +18,7 @@ void main() async {
   );
   bool seenOnboarding = await checkFirstTime();
   bool isDarkMode = await getDarkModePreference();
-  Chapa.configure(privateKey: "CHASECK_TEST-o96iTnMmMniteVl7LrktzfT0h5tqUXhb");
+  Chapa.configure(privateKey: "CHASECK_TEST-eXjcZuJWQAhv5TMRnu3O1fTmuY5QKWkI");
   runApp(
     MultiProvider(
       providers: [

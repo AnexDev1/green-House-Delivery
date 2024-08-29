@@ -123,7 +123,7 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
             final SignupLogic _authController = SignupLogic();
             bool isVerified = await _authController.isEmailVerified();
             final double totalAmount = widget.totalAmount;
-            String txRef = generateTxRef('gh');
+            String txRef = generateTxRef();
             isVerified
                 ? await paymentService.startPayment(
                     context,

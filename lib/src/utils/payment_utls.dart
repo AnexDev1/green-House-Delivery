@@ -2,9 +2,9 @@ import 'package:chapa_unofficial/chapa_unofficial.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-String generateTxRef(String? prefix) {
+String generateTxRef() {
   // Generate a random transaction reference with a custom prefix
-  return TxRefRandomGenerator.generate(prefix: prefix);
+  return TxRefRandomGenerator.generate();
 }
 
 Stream<String> loadUsername() {
