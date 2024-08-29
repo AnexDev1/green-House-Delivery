@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:greenhouse/src/utils/payment_utls.dart';
 import 'package:greenhouse/src/view/auth/login_page.dart';
 import 'package:greenhouse/src/view/profile/getHelp/getHelpPage.dart';
 import 'package:greenhouse/src/view/profile/settings/settings_page.dart';
 import 'package:greenhouse/src/view/profile/updateProfile/updateProfilePage.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/cartProvider.dart';
 
@@ -17,21 +17,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String _username = 'Loading...';
-
-  @override
-  void initState() {
-    super.initState();
-    loadUsername();
-  }
-
-  Future<void> loadUsername() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _username = prefs.getString('username') ?? 'User';
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     String userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
@@ -53,10 +38,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (context) => UpdateProfilePage()),
                   );
                   if (result == true) {
-                    loadUsername(); // Reload username after returning from update page
+                    setState(
+                        () {}); // Reload username after returning from update page
                   }
                 },
-                child: _profileRow(username: _username, userEmail: userEmail),
+                child: StreamBuilder<String>(
+                  stream: loadUsername(),
+                  builder: (context, snapshot) {
+                    String username = snapshot.data ?? 'Loading...';
+                    return _profileRow(
+                        username: username, userEmail: userEmail);
+                  },
+                ),
               ),
             ),
             const SizedBox(

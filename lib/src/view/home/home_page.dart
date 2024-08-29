@@ -1,4 +1,3 @@
-// lib/src/view/home/home_page.dart
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/models/product.dart';
 import 'package:greenhouse/src/services/firebase_database_service.dart';
@@ -24,16 +23,10 @@ class _HomePageState extends State<HomePage>
   late TabController _tabController;
   late Future<List<Product>> _productsFuture;
   List<Product> _filteredProducts = [];
-  String username = 'Loading...';
 
   @override
   void initState() {
     super.initState();
-    loadUsername().then((loadedUsername) {
-      setState(() {
-        username = loadedUsername;
-      });
-    });
     _tabController = TabController(length: 6, vsync: this);
     _productsFuture = FirebaseDatabaseService().fetchProducts();
     _tabController.addListener(() {
@@ -60,7 +53,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final firstName = username.split(" ")[0];
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SafeArea(
@@ -73,18 +65,39 @@ class _HomePageState extends State<HomePage>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        'Hello, $firstName',
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      const Text('Welcome back',
-                          style: TextStyle(fontSize: 16)),
-                    ],
+                  StreamBuilder<String>(
+                    stream: loadUsername(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text(
+                          'Hello, Loading...',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(
+                          'Hello, Error',
+                          style: const TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        );
+                      } else {
+                        final firstName =
+                            snapshot.data?.split(" ")[0] ?? 'User';
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Hello, $firstName',
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            const Text('Welcome back',
+                                style: TextStyle(fontSize: 16)),
+                          ],
+                        );
+                      }
+                    },
                   ),
                   const UserAvatar(
                     imageUrl: 'https://randomuser.me/api/portraits/lego/4.jpg',

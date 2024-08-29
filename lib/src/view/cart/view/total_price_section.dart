@@ -39,7 +39,7 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
   void initState() {
     _initLocationServices();
 
-    loadUsername().then((loadedUsername) {
+    loadUsername().listen((loadedUsername) {
       setState(() {
         username = loadedUsername;
       });

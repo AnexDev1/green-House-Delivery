@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/main_screen.dart';
 import 'package:greenhouse/src/services/firebase_auth_service.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SignupLogic {
   final FirebaseAuthService _authService = FirebaseAuthService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
 
   Future<bool> isEmailVerified() async {
     User? user = _auth.currentUser;
@@ -80,6 +82,11 @@ class SignupLogic {
         await prefs.setString('username', usernameController.text);
         await prefs.setString('phoneNum', phoneNumberController.text);
 
+        await _dbRef.child('users').child(user.uid).set({
+          'username': usernameController.text,
+          'phoneNum': phoneNumberController.text,
+          'email': emailController.text,
+        });
         // Send OTP to email
         await user.sendEmailVerification();
         // Navigate to OTP verification page
@@ -99,6 +106,7 @@ class SignupLogic {
     }
   }
 }
+
 class LoginLogic {
   final FirebaseAuthService _authService = FirebaseAuthService();
 

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/auth/signup_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   @override
@@ -15,6 +15,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   final TextEditingController _confirmNewPasswordController =
       TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
   bool _isNameLoading = false;
   bool _isPasswordLoading = false;
 
@@ -24,8 +25,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     });
     User? user = _auth.currentUser;
     if (user != null && _nameController.text.isNotEmpty) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', _nameController.text);
+      await _dbRef.child('users').child(user.uid).update({
+        'username': _nameController.text,
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Name updated successfully')),
       );
