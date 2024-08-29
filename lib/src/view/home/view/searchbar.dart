@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../search_page.dart';
+
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});
 
@@ -8,15 +10,15 @@ class SearchBarWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: TextField(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SearchPage()),
+          );
+        },
         decoration: InputDecoration(
           hintText: 'Search...',
           prefixIcon: const Icon(Icons.search),
-          // suffixIcon: IconButton(
-          //   icon: const Icon(Icons.filter_list),
-          //   onPressed: () {
-          //     // Implement filter logic
-          //   },
-          // ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),

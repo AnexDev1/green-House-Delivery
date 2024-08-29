@@ -7,6 +7,25 @@ class FirebaseDatabaseService {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<List<Product>> searchProducts(String query) async {
+    final snapshot = await _dbRef
+        .child('products')
+        .orderByChild('name')
+        .startAt(query)
+        .endAt(query + '\uf8ff')
+        .once();
+
+    if (snapshot.snapshot.value != null) {
+      final Map<dynamic, dynamic> productsMap =
+          Map<dynamic, dynamic>.from(snapshot.snapshot.value as Map);
+      return productsMap.values
+          .map((e) => Product.fromMap(Map<String, dynamic>.from(e)))
+          .toList();
+    } else {
+      return [];
+    }
+  }
+
   Future<void> updateName(String name) async {
     User? user = _auth.currentUser;
     if (user != null && name.isNotEmpty) {
