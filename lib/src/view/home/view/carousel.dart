@@ -12,8 +12,7 @@ class VerticalImageCarousel extends StatefulWidget {
 
 class _VerticalImageCarouselState extends State<VerticalImageCarousel> {
   int _currentIndex = 0;
-  final CarouselController _carouselController = CarouselController();
-
+  CarouselSliderController _carouselController = CarouselSliderController();
   @override
   void dispose() {
     _carouselController.stopAutoPlay();
