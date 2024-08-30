@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/cart/cart_page.dart';
 import 'package:greenhouse/src/view/home/home_page.dart';
-import 'package:greenhouse/src/view/home/search_page.dart';
 import 'package:greenhouse/src/view/order/order_history_page.dart';
 import 'package:greenhouse/src/view/profile/profile_page.dart';
+import 'package:greenhouse/src/view/search/search_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

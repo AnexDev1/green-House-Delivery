@@ -47,7 +47,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   builder: (context, snapshot) {
                     String username = snapshot.data ?? 'Loading...';
                     return _profileRow(
-                        username: username, userEmail: userEmail);
+                        context: context,
+                        username: username,
+                        userEmail: userEmail);
                   },
                 ),
               ),
@@ -148,7 +150,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Widget _profileRow({required String username, required String userEmail}) {
+Widget _profileRow(
+    {required BuildContext context,
+    required String username,
+    required String userEmail}) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -177,6 +182,11 @@ Widget _profileRow({required String username, required String userEmail}) {
           ),
         ],
       ),
+      IconButton(
+          onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => UpdateProfilePage()),
+              ),
+          icon: Icon(Icons.keyboard_arrow_right))
     ],
   );
 }
