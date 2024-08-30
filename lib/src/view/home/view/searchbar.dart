@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../search_page.dart';
+import '../../search/search_page.dart';
 
 class SearchBarWidget extends StatelessWidget {
   const SearchBarWidget({super.key});
