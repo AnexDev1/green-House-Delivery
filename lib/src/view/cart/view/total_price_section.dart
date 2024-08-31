@@ -109,49 +109,52 @@ class _TotalPriceSectionState extends State<TotalPriceSection> {
         const SizedBox(height: 16),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xff3fb31e),
+            backgroundColor:
+                widget.cartItems.isEmpty ? Colors.grey : Color(0xff3fb31e),
             minimumSize: const Size.fromHeight(50), // Set the button height
           ),
-          onPressed: () async {
-            if (currentPosition == null) {
-              // Handle the case where currentPosition is not yet initialized
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Location is not available yet.')),
-              );
-              return;
-            }
-            final SignupLogic _authController = SignupLogic();
-            bool isVerified = await _authController.isEmailVerified();
-            final double totalAmount = widget.totalAmount;
-            String txRef = generateTxRef();
-            isVerified
-                ? await paymentService.startPaymentInit(
-                    context,
-                    txRef,
-                    totalAmount,
-                    widget.cartItems,
-                    userEmail!,
-                    orderTime,
-                    currentPosition!)
-                : showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('Email Verification Required'),
-                        content: Text(
-                            'Please verify your email before proceeding with the payment.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-          },
+          onPressed: widget.cartItems.isEmpty
+              ? null
+              : () async {
+                  if (currentPosition == null) {
+                    // Handle the case where currentPosition is not yet initialized
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Location is not available yet.')),
+                    );
+                    return;
+                  }
+                  final SignupLogic _authController = SignupLogic();
+                  bool isVerified = await _authController.isEmailVerified();
+                  final double totalAmount = widget.totalAmount;
+                  String txRef = generateTxRef();
+                  isVerified
+                      ? await paymentService.startPaymentInit(
+                          context,
+                          txRef,
+                          totalAmount,
+                          widget.cartItems,
+                          userEmail!,
+                          orderTime,
+                          currentPosition!)
+                      : showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Email Verification Required'),
+                              content: Text(
+                                  'Please verify your email before proceeding with the payment.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                },
           child: const Text('Proceed to pay',
               style: TextStyle(color: Colors.white, fontSize: 18)),
         ),

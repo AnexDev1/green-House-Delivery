@@ -56,15 +56,15 @@ class OnboardingPage extends StatelessWidget {
       pageBackgroundColor: Colors.white,
       background: [
         Image.asset(
-          'assets/1.png',
+          'assets/anywhere.png',
           height: 400,
         ),
         Image.asset(
-          'assets/2.png',
+          'assets/pay.png',
           height: 400,
         ),
         Image.asset(
-          'assets/3.png',
+          'assets/Driver.png',
           height: 400,
         ),
       ],
@@ -82,7 +82,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 480,
               ),
               Text(
-                'On your way...',
+                'Order From Anywhere',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkGreenColor,
@@ -94,7 +94,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 20,
               ),
               const Text(
-                'to find the perfect looking Onboarding for your app?',
+                'Make orders from the comfort of your home with out the worry to leave ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
@@ -117,7 +117,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 480,
               ),
               Text(
-                'You’ve reached your destination.',
+                'Pay with ease',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkGreenColor,
@@ -129,7 +129,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 20,
               ),
               const Text(
-                'Sliding with animation',
+                'Make payments and track your order on the tip of your finger',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,
@@ -152,7 +152,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 480,
               ),
               Text(
-                'Start now!',
+                'Fast Delivery',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: kDarkGreenColor,
@@ -164,7 +164,7 @@ class OnboardingPage extends StatelessWidget {
                 height: 20,
               ),
               const Text(
-                'Where everything is possible and customize your onboarding.',
+                'Fast and reliable delivery which brings the fresh out of the kitchen',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black26,

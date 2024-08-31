@@ -32,10 +32,24 @@ class CartPage extends StatelessWidget {
               Expanded(
                 child: cartItems.isEmpty
                     ? Center(
-                        child: Text(
-                          'No items in cart',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 60.0),
+                              child: Image.asset(
+                                'assets/cart.png',
+                                width: 200,
+                                height: 200,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              'No items in cart',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
+                            ),
+                          ],
                         ),
                       )
                     : ListView.builder(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:greenhouse/src/view/order/payment_success.dart';
 
 class HomeButton extends StatelessWidget {
-  HomeButton({super.key, this.title, this.onTap});
+  final String? title;
+  final VoidCallback? onTap;
 
-  String? title;
-  VoidCallback? onTap;
+  HomeButton({super.key, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

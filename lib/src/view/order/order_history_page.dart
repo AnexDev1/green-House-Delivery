@@ -1,4 +1,3 @@
-// lib/src/view/order/order_history_page.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +43,8 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Order History'),
@@ -62,10 +63,12 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                 final String formattedDate =
                     DateFormat('dd MMM yyyy').format(orderDate);
 
+                final List<dynamic> cartItems = order['cartItems'];
+
                 return Card(
                   color: order['orderStatus'] == 'pending'
-                      ? Colors.grey[400]
-                      : Color(0xff3fb31e),
+                      ? (isDarkMode ? Colors.grey[800] : Colors.grey[300])
+                      : (isDarkMode ? Colors.green[700] : Colors.green[400]),
                   margin: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 10.0,
@@ -77,11 +80,19 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              formattedDate,
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
+                            Row(
+                              children: [
+                                Icon(Icons.calendar_today,
+                                    color: Colors.white, size: 20),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                  formattedDate,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                             Icon(
                               Icons.arrow_forward_ios,
@@ -91,18 +102,61 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           ],
                         ),
                         const SizedBox(height: 8.0),
-                        Text(
-                          'Name: ${order['paymentData']['first_name']}',
-                          style: TextStyle(color: Colors.white),
+                        Row(
+                          children: [
+                            Icon(Icons.person, color: Colors.white, size: 20),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Name: ${order['paymentData']['first_name']}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Amount: ${order['paymentData']['amount']} birr',
-                          style: TextStyle(color: Colors.white),
+                        Row(
+                          children: [
+                            Icon(Icons.attach_money,
+                                color: Colors.white, size: 20),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Amount: ${order['paymentData']['amount']} birr',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          'Status: ${order['orderStatus']}',
-                          style: TextStyle(color: Colors.white),
+                        Row(
+                          children: [
+                            Icon(Icons.shopping_cart,
+                                color: Colors.white, size: 20),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              'Cart Items:',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
+                        ...cartItems.map((item) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2.0),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 24.0), // Indentation
+                                Text(
+                                  '${item['name']} - ${item['quantity']} x ${item['price']} birr',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
                       ],
                     ),
                     onTap: () {
